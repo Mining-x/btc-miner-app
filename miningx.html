@@ -334,8 +334,6 @@
         
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
-        const BTC_PRICE_API = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; // NEW API
-        const PRICE_UPDATE_INTERVAL = 300; // 300 milliseconds
         const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
@@ -347,7 +345,7 @@
         // Package Constants (UPDATED)
         const PACKAGES = {
             '1_month': { price: 140, days: 30, label: '1 Month' },
-            '6_month': { price: 260, days: 180, label: '6 Month' }, 
+            '6_month': { price: 260, days: 180, label: '6 Month' }, // NEW
             '1_year': { price: 400, days: 365, label: '1 Year' }
         };
 
@@ -359,10 +357,9 @@
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            btc_price: 65000.00 // Default initial price
+            btc_price: 65000.00
         };
         let miningInterval = null; 
-        let priceUpdateInterval = null; // New interval for price updates
         const NETWORK_FEE = 0.00000050; 
         let activeLicenseKey = null; 
 
@@ -481,10 +478,7 @@
                 if (storedState) {
                     const loadedState = JSON.parse(storedState);
                     minerState.balance = loadedState.balance || STARTING_BALANCE;
-                    // Only load price if it's a valid number, otherwise default is used and updated by API
-                    if (loadedState.btc_price && !isNaN(parseFloat(loadedState.btc_price))) {
-                         minerState.btc_price = parseFloat(loadedState.btc_price);
-                    }
+                    minerState.btc_price = loadedState.btc_price || minerState.btc_price;
                     logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
                     minerState.balance = STARTING_BALANCE;
@@ -522,9 +516,7 @@
             updateReceivedAmount();
             updateMinWithdrawalDisplay();
 
-            // Save state but only when mining is active or on important events
-            // Since price updates every 300ms, we only save the state from the mining loop or withdrawal
-            // saveMinerState(); 
+            saveMinerState(); 
         }
 
         function getActivatedLicenses() {
@@ -760,7 +752,6 @@
             clearTimeout(miningInterval);
             miningInterval = null;
             logToConsole("Mining stopped by user.", '#dc3545');
-            saveMinerState(); // Save state on stop
 
             startMiningBtn.disabled = false;
             startMiningBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -781,13 +772,15 @@
         function mineBitcoin() {
             if (miningInterval === null) return;
 
-            // Mining is now separate from price updates
             const amountMined = Math.random() * 0.00000009 + 0.00000001; 
+            const priceChange = (Math.random() - 0.5) * 200; 
 
             minerState.balance += amountMined;
+            minerState.btc_price += priceChange;
+            if (minerState.btc_price < 50000) minerState.btc_price = 50000;
+            if (minerState.btc_price > 80000) minerState.btc_price = 80000;
             
             updateDisplay();
-            saveMinerState(); // Save state on mine event
 
             logToConsole(`Block mined! Amount: ${amountMined.toFixed(8)} BTC`, '#ffc107');
             logToConsole("Difficulty: 2.3T", '#1f6feb');
@@ -796,48 +789,7 @@
         }
 
         // ------------------------------------------------
-        // 4. REAL-TIME PRICE UPDATE
-        // ------------------------------------------------
-        
-        async function fetchBtcPrice() {
-            try {
-                const response = await fetch(BTC_PRICE_API);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                const newPrice = parseFloat(data.price);
-                
-                if (!isNaN(newPrice) && newPrice > 0) {
-                    minerState.btc_price = newPrice;
-                }
-                
-            } catch (error) {
-                // Console log the error but don't show a modal for a minor issue like a transient price fetch failure
-                console.error("Error fetching BTC price:", error);
-                // Keep the last known price
-            } finally {
-                // Update display regardless of success/failure to update the USD value
-                updateDisplay();
-            }
-        }
-        
-        function startPriceUpdater() {
-            if (priceUpdateInterval !== null) return;
-            // Fetch immediately, then set interval
-            fetchBtcPrice(); 
-            priceUpdateInterval = setInterval(fetchBtcPrice, PRICE_UPDATE_INTERVAL);
-        }
-
-        function stopPriceUpdater() {
-            if (priceUpdateInterval === null) return;
-            clearInterval(priceUpdateInterval);
-            priceUpdateInterval = null;
-        }
-
-
-        // ------------------------------------------------
-        // 5. PAYMENT SUBMISSION (Simulated)
+        // 4. PAYMENT SUBMISSION (Simulated)
         // ------------------------------------------------
 
         /**
@@ -923,7 +875,7 @@
 
 
         // ------------------------------------------------
-        // 6. EVENT LISTENERS & INITIALIZATION
+        // 5. EVENT LISTENERS & INITIALIZATION
         // ------------------------------------------------
 
         // Mining Control
@@ -1045,8 +997,7 @@
             
             minerState.balance = STARTING_BALANCE; 
             updateDisplay(); 
-            saveMinerState(); // Save state on withdrawal
-
+            
             withdrawalStatus.textContent = `Withdrawal of ${received.toFixed(8)} BTC confirmed. Balance reset for this license key.`;
             withdrawalStatus.style.color = '#38a169'; 
 
@@ -1057,16 +1008,11 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-            startPriceUpdater(); // Start the real-time price update
+            // No Firebase setup needed
             if (!checkLicense()) {
                 updateDisplay(); 
             }
             selectPackage(currentPackageKey);
-        };
-        
-        window.onbeforeunload = () => {
-             stopMining();
-             stopPriceUpdater();
         };
     </script>
 
