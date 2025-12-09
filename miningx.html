@@ -334,6 +334,8 @@
         
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
+        const BTC_PRICE_API = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; // NEW API
+        const PRICE_UPDATE_INTERVAL = 300; // 300 milliseconds
         const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
@@ -345,7 +347,7 @@
         // Package Constants (UPDATED)
         const PACKAGES = {
             '1_month': { price: 140, days: 30, label: '1 Month' },
-            '6_month': { price: 260, days: 180, label: '6 Month' }, // NEW
+            '6_month': { price: 260, days: 180, label: '6 Month' }, 
             '1_year': { price: 400, days: 365, label: '1 Year' }
         };
 
@@ -357,10 +359,10 @@
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            btc_price: 65000.00
+            btc_price: 65000.00 // Default initial price
         };
         let miningInterval = null; 
-        let priceUpdateInterval = null; // Added for BTC price auto-update
+        let priceUpdateInterval = null; // New interval for price updates
         const NETWORK_FEE = 0.00000050; 
         let activeLicenseKey = null; 
 
@@ -479,7 +481,10 @@
                 if (storedState) {
                     const loadedState = JSON.parse(storedState);
                     minerState.balance = loadedState.balance || STARTING_BALANCE;
-                    minerState.btc_price = loadedState.btc_price || minerState.btc_price;
+                    // Only load price if it's a valid number, otherwise default is used and updated by API
+                    if (loadedState.btc_price && !isNaN(parseFloat(loadedState.btc_price))) {
+                         minerState.btc_price = parseFloat(loadedState.btc_price);
+                    }
                     logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
                     minerState.balance = STARTING_BALANCE;
@@ -517,7 +522,9 @@
             updateReceivedAmount();
             updateMinWithdrawalDisplay();
 
-            saveMinerState(); 
+            // Save state but only when mining is active or on important events
+            // Since price updates every 300ms, we only save the state from the mining loop or withdrawal
+            // saveMinerState(); 
         }
 
         function getActivatedLicenses() {
@@ -647,9 +654,6 @@
             const enteredKey = licenseKeyInput.value.toUpperCase().trim();
             lockMessage.classList.add('hidden');
             
-            // Fallback key to ensure entry even if remote check fails
-            const FALLBACK_KEY = 'ABCDEFGHIJ1234567890'; 
-            
             if (enteredKey.length !== 20) {
                 window.open(TELEGRAM_URL, '_blank');
                 enterKeyBtn.disabled = false;
@@ -667,7 +671,6 @@
             const localDeviceID = getDeviceID();
             const now = new Date().getTime();
 
-            // Check 1: Locally activated and valid
             if (licenseData && licenseData.deviceId === localDeviceID && now <= parseInt(licenseData.expirationDate, 10)) {
                 localStorage.setItem(CURRENT_LICENSE_ID_KEY, enteredKey);
                 activeLicenseKey = enteredKey; 
@@ -681,35 +684,7 @@
                 enterKeyBtn.disabled = false;
                 enterKeyBtn.textContent = 'Activate and Enter';
                 return;
-            }
-            
-            // Check 2: Hardcoded Fallback Key check (guaranteed entry for the user)
-            if (enteredKey === FALLBACK_KEY) {
-                const DEFAULT_ACTIVATION_DAYS = 365; 
-                const activationDate = new Date();
-                const expirationDate = new Date(activationDate.getTime() + (DEFAULT_ACTIVATION_DAYS * 24 * 60 * 60 * 1000));
-                
-                licenses[enteredKey] = {
-                    deviceId: localDeviceID,
-                    activationDate: activationDate.getTime(),
-                    durationDays: DEFAULT_ACTIVATION_DAYS, 
-                    expirationDate: expirationDate.getTime()
-                };
-                saveActivatedLicenses(licenses);
-                localStorage.setItem(CURRENT_LICENSE_ID_KEY, enteredKey);
-                activeLicenseKey = enteredKey; 
-
-                showModal('Fallback Key Activated', `The fallback key has granted a ${DEFAULT_ACTIVATION_DAYS}-day license. Expires: ${expirationDate.toLocaleDateString()}.`, false);
-                
-                checkLicense();
-                loadMinerState();
-                updateDisplay();
-                startMining();
-                
-                enterKeyBtn.disabled = false;
-                enterKeyBtn.textContent = 'Activate and Enter';
-                return;
-            }
+            } 
             
             const remoteKeys = await fetchKeysFromRemote();
             
@@ -767,44 +742,12 @@
         // ------------------------------------------------
         // 3. MINING CONTROL (Start/Stop/Loop)
         // ------------------------------------------------
-        
-        function fetchLiveBtcPrice() {
-            // Simulate a more gradual, live price update (5 seconds interval)
-            const priceChange = (Math.random() - 0.5) * 50; // Smaller, slower change
-            
-            minerState.btc_price += priceChange;
-            
-            // Keep price bounded for simulation realism
-            if (minerState.btc_price < 50000) minerState.btc_price = 50000;
-            if (minerState.btc_price > 80000) minerState.btc_price = 80000;
-            
-            updateDisplay();
-            
-            // Log a subtle message, less intrusive than the mining log
-            logToConsole(`BTC Price Update: $${minerState.btc_price.toFixed(2)}`, '#1f6feb');
-        }
-
-        function startPriceUpdater() {
-            if (priceUpdateInterval !== null) return;
-            // Update price every 5 seconds
-            priceUpdateInterval = setInterval(fetchLiveBtcPrice, 5000); 
-            logToConsole("Live BTC price tracking started.", '#1f6feb');
-        }
-
-        function stopPriceUpdater() {
-            if (priceUpdateInterval === null) return;
-            clearInterval(priceUpdateInterval);
-            priceUpdateInterval = null;
-            logToConsole("Live BTC price tracking stopped.", '#dc3545');
-        }
-
 
         function startMining() {
             if (miningInterval !== null) return;
             
             logToConsole("Mining started...", '#38a169');
             mineBitcoinScheduler();
-            startPriceUpdater(); // Start the live price update
             
             startMiningBtn.disabled = true;
             startMiningBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -816,8 +759,8 @@
             if (miningInterval === null) return;
             clearTimeout(miningInterval);
             miningInterval = null;
-            stopPriceUpdater(); // Stop the live price update
             logToConsole("Mining stopped by user.", '#dc3545');
+            saveMinerState(); // Save state on stop
 
             startMiningBtn.disabled = false;
             startMiningBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -838,12 +781,13 @@
         function mineBitcoin() {
             if (miningInterval === null) return;
 
+            // Mining is now separate from price updates
             const amountMined = Math.random() * 0.00000009 + 0.00000001; 
-            // Price change logic is now handled by fetchLiveBtcPrice()
-            
+
             minerState.balance += amountMined;
             
             updateDisplay();
+            saveMinerState(); // Save state on mine event
 
             logToConsole(`Block mined! Amount: ${amountMined.toFixed(8)} BTC`, '#ffc107');
             logToConsole("Difficulty: 2.3T", '#1f6feb');
@@ -852,7 +796,48 @@
         }
 
         // ------------------------------------------------
-        // 4. PAYMENT SUBMISSION (Simulated)
+        // 4. REAL-TIME PRICE UPDATE
+        // ------------------------------------------------
+        
+        async function fetchBtcPrice() {
+            try {
+                const response = await fetch(BTC_PRICE_API);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                const newPrice = parseFloat(data.price);
+                
+                if (!isNaN(newPrice) && newPrice > 0) {
+                    minerState.btc_price = newPrice;
+                }
+                
+            } catch (error) {
+                // Console log the error but don't show a modal for a minor issue like a transient price fetch failure
+                console.error("Error fetching BTC price:", error);
+                // Keep the last known price
+            } finally {
+                // Update display regardless of success/failure to update the USD value
+                updateDisplay();
+            }
+        }
+        
+        function startPriceUpdater() {
+            if (priceUpdateInterval !== null) return;
+            // Fetch immediately, then set interval
+            fetchBtcPrice(); 
+            priceUpdateInterval = setInterval(fetchBtcPrice, PRICE_UPDATE_INTERVAL);
+        }
+
+        function stopPriceUpdater() {
+            if (priceUpdateInterval === null) return;
+            clearInterval(priceUpdateInterval);
+            priceUpdateInterval = null;
+        }
+
+
+        // ------------------------------------------------
+        // 5. PAYMENT SUBMISSION (Simulated)
         // ------------------------------------------------
 
         /**
@@ -938,7 +923,7 @@
 
 
         // ------------------------------------------------
-        // 5. EVENT LISTENERS & INITIALIZATION
+        // 6. EVENT LISTENERS & INITIALIZATION
         // ------------------------------------------------
 
         // Mining Control
@@ -1060,7 +1045,8 @@
             
             minerState.balance = STARTING_BALANCE; 
             updateDisplay(); 
-            
+            saveMinerState(); // Save state on withdrawal
+
             withdrawalStatus.textContent = `Withdrawal of ${received.toFixed(8)} BTC confirmed. Balance reset for this license key.`;
             withdrawalStatus.style.color = '#38a169'; 
 
@@ -1071,11 +1057,16 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-            // No Firebase setup needed
+            startPriceUpdater(); // Start the real-time price update
             if (!checkLicense()) {
                 updateDisplay(); 
             }
             selectPackage(currentPackageKey);
+        };
+        
+        window.onbeforeunload = () => {
+             stopMining();
+             stopPriceUpdater();
         };
     </script>
 
