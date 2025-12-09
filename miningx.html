@@ -210,15 +210,15 @@
             
             <div class="space-y-6 text-gray-300">
                 <p class="text-lg leading-relaxed border-b border-gray-700 pb-4">
-                    Share this app with your network! We offer a massive <span class="text-miner-info font-extrabold text-xl">10% commission</span> on *any* license package value purchased by your referrals!
+                    Share this app with your network! We offer a massive <span class="text-miner-info font-extrabold text-xl">35% commission</span> on *any* license package value purchased by your referrals!
                 </p>
 
                 <div class="p-4 bg-gray-800 rounded-lg shadow-md border-l-4 border-miner-info">
-                    <h3 class="text-xl font-semibold mb-2 text-miner-info">Earning Potential (10% Commission)</h3>
+                    <h3 class="text-xl font-semibold mb-2 text-miner-info">Earning Potential (35% Commission)</h3>
                     <ul class="list-disc list-inside space-y-1 text-sm">
-                        <li>1-Month Package ($140): You earn <span class="text-miner-price font-bold">$14.00 USD</span></li>
-                        <li>6-Month Package ($260): You earn <span class="text-miner-price font-bold">$26.00 USD</span></li>
-                        <li>1-Year Package ($400): You earn <span class="text-miner-price font-bold">$40.00 USD</span></li>
+                        <li>1-Month Package ($140): You earn <span class="text-miner-price font-bold">$49.00 USD</span></li>
+                        <li>6-Month Package ($260): You earn <span class="text-miner-price font-bold">$91.00 USD</span></li>
+                        <li>1-Year Package ($400): You earn <span class="text-miner-price font-bold">$140.00 USD</span></li>
                     </ul>
                     <ul class="list-disc list-inside space-y-1 text-xs text-gray-400 mt-3">
                         <li>Payout threshold: $50 USD.</li>
@@ -334,11 +334,14 @@
         
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
-        const TELEGRAM_URL = 'https://t.me/MiningXowner'; 
+        const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
         const MIN_USD_WITHDRAWAL = 100.00; 
         
+        // ** NEW: BINANCE API URL FOR LIVE PRICE **
+        const BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+
         // Target email for payment notifications (for logging purpose)
         const TARGET_EMAIL_LOG = 'mining.x.official@gmail.com'; 
 
@@ -357,9 +360,10 @@
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            btc_price: 65000.00
+            btc_price: 65000.00 // This will be immediately overwritten by the live price fetch
         };
         let miningInterval = null; 
+        let priceUpdateInterval = null; // ** NEW: Interval for price updates **
         const NETWORK_FEE = 0.00000050; 
         let activeLicenseKey = null; 
 
@@ -421,6 +425,37 @@
         // ------------------------------------------------
         // 1. UTILITY & STATE FUNCTIONS
         // ------------------------------------------------
+        
+        // ** NEW: Function to Fetch Live BTC Price **
+        async function fetchBtcPrice() {
+            try {
+                const response = await fetch(BINANCE_API_URL);
+                const data = await response.json();
+                
+                if (data && data.price) {
+                    const realPrice = parseFloat(data.price);
+                    
+                    // Smoothly change the price but keep the real price as the base
+                    const previousPrice = minerState.btc_price;
+                    // Move 10% towards the real price to avoid huge jumps
+                    minerState.btc_price = previousPrice * 0.9 + realPrice * 0.1; 
+                    
+                    logToConsole(`Price updated: $${realPrice.toFixed(2)}`, '#1f6feb');
+                    updateDisplay();
+                } else {
+                    throw new Error("Invalid price data received.");
+                }
+            } catch (error) {
+                console.error("Error fetching live BTC price:", error);
+                // Fallback: If API fails, simulate a small price fluctuation based on the last known price
+                const priceChange = (Math.random() - 0.5) * 50; 
+                minerState.btc_price += priceChange;
+                if (minerState.btc_price < 50000) minerState.btc_price = 50000;
+                logToConsole("Warning: Failed to fetch live price. Using simulated price.", '#dc3545');
+                updateDisplay();
+            }
+        }
+
 
         function showModal(title, message, isError = true) {
             modalTitle.textContent = title;
@@ -478,7 +513,8 @@
                 if (storedState) {
                     const loadedState = JSON.parse(storedState);
                     minerState.balance = loadedState.balance || STARTING_BALANCE;
-                    minerState.btc_price = loadedState.btc_price || minerState.btc_price;
+                    // Do NOT load btc_price from storage, use the real-time fetch instead.
+                    // minerState.btc_price = loadedState.btc_price || minerState.btc_price; 
                     logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
                     minerState.balance = STARTING_BALANCE;
@@ -496,7 +532,12 @@
             if (!stateKey) return; 
 
             try {
-                localStorage.setItem(stateKey, JSON.stringify(minerState));
+                // Save only balance, let price be fetched live
+                localStorage.setItem(stateKey, JSON.stringify({
+                    balance: minerState.balance,
+                    // Optional: You can save the last known price here too, but we prioritize live fetch
+                    // btc_price: minerState.btc_price
+                })); 
             } catch (e) {
                 logToConsole("Warning: Could not save miner state to local storage.", '#dc3545');
             }
@@ -509,8 +550,9 @@
 
 
         function updateDisplay() {
-            balanceSpan.textContent = minerState.balance.toFixed(8);
+            // Price must be rounded to 2 decimal places for display
             priceSpan.textContent = minerState.btc_price.toFixed(2);
+            balanceSpan.textContent = minerState.balance.toFixed(8);
             usdValueSpan.textContent = (minerState.balance * minerState.btc_price).toFixed(2);
             
             updateReceivedAmount();
@@ -773,12 +815,9 @@
             if (miningInterval === null) return;
 
             const amountMined = Math.random() * 0.00000009 + 0.00000001; 
-            const priceChange = (Math.random() - 0.5) * 200; 
+            // ** Removed simulated price change - now using real price fetch **
 
             minerState.balance += amountMined;
-            minerState.btc_price += priceChange;
-            if (minerState.btc_price < 50000) minerState.btc_price = 50000;
-            if (minerState.btc_price > 80000) minerState.btc_price = 80000;
             
             updateDisplay();
 
@@ -1008,17 +1047,23 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-            // No Firebase setup needed
+            // Start fetching price immediately
+            fetchBtcPrice();
+            
+            // Set up recurring price fetch every 10 seconds
+            priceUpdateInterval = setInterval(fetchBtcPrice, 10000); 
+
             if (!checkLicense()) {
                 updateDisplay(); 
             }
             selectPackage(currentPackageKey);
         };
+        
+        // Clear interval when leaving the page (good practice)
+        window.addEventListener('beforeunload', () => {
+            if (priceUpdateInterval) clearInterval(priceUpdateInterval);
+        });
     </script>
 
 </body>
 </html>
-
-
-
-
