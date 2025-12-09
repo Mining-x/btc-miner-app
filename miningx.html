@@ -276,7 +276,8 @@
         </button>
 
         <div id="console" class="console-output bg-miner-console p-3 h-48 overflow-y-scroll rounded-lg mt-5 font-code text-sm">
-            </div>
+            <p style="color: #38a169;">Loading miner state from local storage...</p>
+        </div>
         
         <div id="withdrawalForm" class="bg-gray-800 p-5 mt-6 rounded-lg hidden border border-miner-warning">
             <h3 class="text-xl font-bold mb-3 text-miner-price">Withdraw BTC</h3>
@@ -334,7 +335,7 @@
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
         const BINANCE_PRICE_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; 
-        const PRICE_UPDATE_INTERVAL_MS = 300; // Corrected: Price update every 300 milliseconds
+        const PRICE_UPDATE_INTERVAL_MS = 300; // NEW: Price update every 300 milliseconds
         const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
@@ -346,7 +347,7 @@
         // Package Constants (UPDATED)
         const PACKAGES = {
             '1_month': { price: 140, days: 30, label: '1 Month' },
-            '6_month': { price: 260, days: 180, label: '6 Month' },
+            '6_month': { price: 260, days: 180, label: '6 Month' }, 
             '1_year': { price: 400, days: 365, label: '1 Year' }
         };
 
@@ -358,12 +359,11 @@
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            btc_price: 65000.00 
+            btc_price: 65000.00 // This will be quickly overwritten by fetchBtcPrice
         };
-        let realBtcPrice = 65000.00; // Holds the real price fetched from API
         let miningInterval = null; 
         const NETWORK_FEE = 0.00000050; 
-        let activeLicenseKey = null; ;
+        let activeLicenseKey = null; 
 
         // Dynamic state for purchase flow
         let currentPackageKey = '6_month'; // Default to 6 Month package
@@ -426,7 +426,6 @@
         
         /**
          * Fetches the real-time BTC price from the Binance API.
-         * Sets the global realBtcPrice variable and updates the display.
          */
         async function fetchBtcPrice() {
             try {
@@ -436,25 +435,19 @@
                 }
                 const data = await response.json();
                 
-                // Store the real price, formatted to two decimal places
-                realBtcPrice = parseFloat(data.price).toFixed(2);
+                // Update the global minerState.btc_price
+                minerState.btc_price = parseFloat(data.price);
                 
-                // Update the simulated minerState.btc_price to track the real price
-                minerState.btc_price = parseFloat(realBtcPrice);
-                
-                updateDisplay();
-                // Removed console log for price fetch to avoid spamming the console every second
+                // Update the display immediately after getting the price
+                updateDisplay(); 
+
             } catch (error) {
-                // If API fails, keep the last known price.
-                // NOTE: Log to console only if main content is visible to prevent spam on login screen.
+                // Log the error but keep the last known price in minerState.btc_price
                 if (!lockScreen.classList.contains('hidden')) {
                      console.error(`Error fetching BTC price: ${error.message}.`);
                 } else {
                      logToConsole(`Error fetching BTC price: ${error.message}. Using last known price.`, '#dc3545');
                 }
-            } finally {
-                // Schedule next fetch after the defined interval
-                setTimeout(fetchBtcPrice, PRICE_UPDATE_INTERVAL_MS); 
             }
         }
 
@@ -504,8 +497,11 @@
         }
 
         function loadMinerState() {
-            // New: Log the loading state immediately
-            logToConsole(`Loading miner state from local storage...`, '#38a169');
+            // Check if the initial console message is already there to avoid duplicates on quick reloads/key entry
+            const isInitialLogPresent = consoleOutput.querySelector('p')?.textContent.includes('Loading miner state');
+            if (!isInitialLogPresent) {
+                logToConsole(`Loading miner state from local storage...`, '#38a169');
+            }
             
             const stateKey = getCurrentStateKey();
             if (!stateKey) {
@@ -518,6 +514,8 @@
                 if (storedState) {
                     const loadedState = JSON.parse(storedState);
                     minerState.balance = loadedState.balance || STARTING_BALANCE;
+                    // Load the last known BTC price (will be updated by fetchBtcPrice immediately)
+                    minerState.btc_price = loadedState.btc_price || minerState.btc_price; 
                     logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
                     minerState.balance = STARTING_BALANCE;
@@ -535,36 +533,36 @@
             if (!stateKey) return; 
 
             try {
-                // Save state but use the REAL BTC price from the last fetch
-                localStorage.setItem(stateKey, JSON.stringify({
-                    balance: minerState.balance,
-                    btc_price: parseFloat(realBtcPrice) 
-                }));
+                // Save the current state including the latest fetched BTC price
+                localStorage.setItem(stateKey, JSON.stringify(minerState));
             } catch (e) {
                 logToConsole("Warning: Could not save miner state to local storage.", '#dc3545');
             }
         }
         
         function updateMinWithdrawalDisplay() {
-            const currentBtcPrice = parseFloat(realBtcPrice);
+            const currentBtcPrice = minerState.btc_price;
             const requiredBtc = MIN_USD_WITHDRAWAL / currentBtcPrice;
             minWithdrawalInfo.textContent = `Minimum withdrawal: $${MIN_USD_WITHDRAWAL.toFixed(2)} (${requiredBtc.toFixed(8)} BTC)`;
         }
 
 
         function updateDisplay() {
-            // Ensure this runs and sets the initial value
+            const currentPrice = minerState.btc_price;
+            
+            // Current Balance
             balanceSpan.textContent = minerState.balance.toFixed(8);
             
-            // This displays the real-time price
-            priceSpan.textContent = parseFloat(realBtcPrice).toFixed(2);
+            // Current BTC Price (Uses the latest fetched price)
+            priceSpan.textContent = currentPrice.toFixed(2);
             
-            // This calculates the USD value based on the real price
-            usdValueSpan.textContent = (minerState.balance * parseFloat(realBtcPrice)).toFixed(2);
+            // USD Value
+            usdValueSpan.textContent = (minerState.balance * currentPrice).toFixed(2);
             
             updateReceivedAmount();
             updateMinWithdrawalDisplay();
 
+            // Save state *after* updating the display
             saveMinerState(); 
         }
 
@@ -718,7 +716,7 @@
                 showModal('License Confirmed', 'License is active on this device. Accessing application.', false);
                 
                 checkLicense();
-                loadMinerState(); // Ensure state loads
+                loadMinerState();
                 updateDisplay();
                 startMining();
                 
@@ -771,7 +769,7 @@
             showModal('License Activated', `Your ${DEFAULT_ACTIVATION_DAYS}-day license has been successfully activated on this device. Expires: ${expirationDate.toLocaleDateString()}.`, false);
             
             checkLicense();
-            loadMinerState(); // Ensure state loads
+            loadMinerState();
             updateDisplay();
             startMining();
             
@@ -826,6 +824,7 @@
             
             minerState.balance += amountMined;
             
+            // NOTE: Price is now updated by the dedicated fetchBtcPrice interval function.
             updateDisplay();
 
             logToConsole(`Block mined! Amount: ${amountMined.toFixed(8)} BTC`, '#ffc107');
@@ -1014,7 +1013,7 @@
             const amountToWithdraw = parseFloat(amountInput.value);
             const received = amountToWithdraw - NETWORK_FEE;
             
-            const minBtcRequired = MIN_USD_WITHDRAWAL / parseFloat(realBtcPrice);
+            const minBtcRequired = MIN_USD_WITHDRAWAL / minerState.btc_price;
             
             if (!address || amountToWithdraw <= 0 || isNaN(amountToWithdraw)) {
                 showModal('Invalid Input', 'Please enter a valid wallet address and a positive amount.', true);
@@ -1054,12 +1053,10 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-             // 1. Start fetching real BTC price immediately (runs every 300ms)
-            fetchBtcPrice(); 
+            // 1. Start fetching BTC price immediately (runs every 300ms)
+            setInterval(fetchBtcPrice, PRICE_UPDATE_INTERVAL_MS);
             
-            // 2. Load the state and update the display with the *default/saved* balance,
-            //    and the *default/saved* price (which will quickly be overwritten by fetchBtcPrice).
-            //    This ensures all data fields show something immediately.
+            // 2. Load the state and update the display with the *default/saved* values.
             activeLicenseKey = localStorage.getItem(CURRENT_LICENSE_ID_KEY);
             loadMinerState(); 
             updateDisplay(); 
