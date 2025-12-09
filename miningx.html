@@ -334,7 +334,8 @@
         
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
-        const BINANCE_PRICE_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; // NEW: Real BTC Price API
+        const BINANCE_PRICE_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; 
+        const PRICE_UPDATE_INTERVAL_MS = 1000; // NEW: Price update every 1 second
         const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
@@ -358,12 +359,9 @@
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            // btc_price is now set from the API, 65000.00 is a fallback/initial value
             btc_price: 65000.00 
         };
-        // NEW: Separate state for the real BTC price
-        let realBtcPrice = 65000.00;
-
+        let realBtcPrice = 65000.00; // Holds the real price fetched from API
         let miningInterval = null; 
         const NETWORK_FEE = 0.00000050; 
         let activeLicenseKey = null; ;
@@ -443,17 +441,16 @@
                 realBtcPrice = parseFloat(data.price).toFixed(2);
                 
                 // Update the simulated minerState.btc_price to track the real price
-                // but keep the mining simulation independent of minor real-time fluctuations
                 minerState.btc_price = parseFloat(realBtcPrice);
                 
                 updateDisplay();
-                logToConsole(`Fetched real BTC Price: $${realBtcPrice}`, '#ffc107');
+                // Removed console log for price fetch to avoid spamming the console every second
             } catch (error) {
-                logToConsole(`Error fetching BTC price: ${error.message}. Using fallback.`, '#dc3545');
-                // Use minerState.btc_price (fallback value) if API fails
+                // If API fails, keep the last known price.
+                logToConsole(`Error fetching BTC price: ${error.message}. Using last known price.`, '#dc3545');
             } finally {
-                // Schedule next fetch (e.g., every 60 seconds)
-                setTimeout(fetchBtcPrice, 60000); 
+                // Schedule next fetch after the defined interval
+                setTimeout(fetchBtcPrice, PRICE_UPDATE_INTERVAL_MS); 
             }
         }
 
@@ -514,7 +511,6 @@
                 if (storedState) {
                     const loadedState = JSON.parse(storedState);
                     minerState.balance = loadedState.balance || STARTING_BALANCE;
-                    // Miner's simulated price is ignored on load; we use the real one.
                     logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
                     minerState.balance = STARTING_BALANCE;
@@ -535,7 +531,7 @@
                 // Save state but use the REAL BTC price from the last fetch
                 localStorage.setItem(stateKey, JSON.stringify({
                     balance: minerState.balance,
-                    btc_price: parseFloat(realBtcPrice) // Use real price for storage
+                    btc_price: parseFloat(realBtcPrice) 
                 }));
             } catch (e) {
                 logToConsole("Warning: Could not save miner state to local storage.", '#dc3545');
@@ -552,9 +548,10 @@
         function updateDisplay() {
             balanceSpan.textContent = minerState.balance.toFixed(8);
             
-            // This is the line that must be updated to use the real price
+            // This displays the real-time price
             priceSpan.textContent = parseFloat(realBtcPrice).toFixed(2);
             
+            // This calculates the USD value based on the real price
             usdValueSpan.textContent = (minerState.balance * parseFloat(realBtcPrice)).toFixed(2);
             
             updateReceivedAmount();
@@ -821,8 +818,6 @@
             
             minerState.balance += amountMined;
             
-            // The price change simulation is removed since we are fetching the real price
-            
             updateDisplay();
 
             logToConsole(`Block mined! Amount: ${amountMined.toFixed(8)} BTC`, '#ffc107');
@@ -1051,7 +1046,7 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-            // Start fetching real BTC price immediately
+            // Start fetching real BTC price immediately and schedule future fetches
             fetchBtcPrice(); 
             
             if (!checkLicense()) {
