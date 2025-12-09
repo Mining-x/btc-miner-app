@@ -276,8 +276,7 @@
         </button>
 
         <div id="console" class="console-output bg-miner-console p-3 h-48 overflow-y-scroll rounded-lg mt-5 font-code text-sm">
-            <p style="color: #38a169;">Loading miner state from local storage...</p>
-        </div>
+            </div>
         
         <div id="withdrawalForm" class="bg-gray-800 p-5 mt-6 rounded-lg hidden border border-miner-warning">
             <h3 class="text-xl font-bold mb-3 text-miner-price">Withdraw BTC</h3>
@@ -335,7 +334,7 @@
         // --- Configuration ---
         const REMOTE_KEY_URL = 'https://raw.githubusercontent.com/Mining-x/btc-miner-app/refs/heads/main/keys.txt';
         const BINANCE_PRICE_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'; 
-        const PRICE_UPDATE_INTERVAL_MS = 300; // CORRECTED: Price update every 300 milliseconds
+        const PRICE_UPDATE_INTERVAL_MS = 300; // Corrected: Price update every 300 milliseconds
         const TELEGRAM_URL = 'https://t.me/@MiningXowner'; 
         const MAX_RETRIES = 3; 
         const STARTING_BALANCE = 0.00000001;
@@ -447,7 +446,12 @@
                 // Removed console log for price fetch to avoid spamming the console every second
             } catch (error) {
                 // If API fails, keep the last known price.
-                logToConsole(`Error fetching BTC price: ${error.message}. Using last known price.`, '#dc3545');
+                // NOTE: Log to console only if main content is visible to prevent spam on login screen.
+                if (!lockScreen.classList.contains('hidden')) {
+                     console.error(`Error fetching BTC price: ${error.message}.`);
+                } else {
+                     logToConsole(`Error fetching BTC price: ${error.message}. Using last known price.`, '#dc3545');
+                }
             } finally {
                 // Schedule next fetch after the defined interval
                 setTimeout(fetchBtcPrice, PRICE_UPDATE_INTERVAL_MS); 
@@ -500,6 +504,9 @@
         }
 
         function loadMinerState() {
+            // New: Log the loading state immediately
+            logToConsole(`Loading miner state from local storage...`, '#38a169');
+            
             const stateKey = getCurrentStateKey();
             if (!stateKey) {
                 minerState.balance = STARTING_BALANCE; 
@@ -546,6 +553,7 @@
 
 
         function updateDisplay() {
+            // Ensure this runs and sets the initial value
             balanceSpan.textContent = minerState.balance.toFixed(8);
             
             // This displays the real-time price
@@ -710,7 +718,7 @@
                 showModal('License Confirmed', 'License is active on this device. Accessing application.', false);
                 
                 checkLicense();
-                loadMinerState();
+                loadMinerState(); // Ensure state loads
                 updateDisplay();
                 startMining();
                 
@@ -763,7 +771,7 @@
             showModal('License Activated', `Your ${DEFAULT_ACTIVATION_DAYS}-day license has been successfully activated on this device. Expires: ${expirationDate.toLocaleDateString()}.`, false);
             
             checkLicense();
-            loadMinerState();
+            loadMinerState(); // Ensure state loads
             updateDisplay();
             startMining();
             
@@ -1046,12 +1054,18 @@
 
         // --- Initialization on Load ---
         window.onload = () => {
-            // Start fetching real BTC price immediately and schedule future fetches
+             // 1. Start fetching real BTC price immediately (runs every 300ms)
             fetchBtcPrice(); 
             
-            if (!checkLicense()) {
-                updateDisplay(); 
-            }
+            // 2. Load the state and update the display with the *default/saved* balance,
+            //    and the *default/saved* price (which will quickly be overwritten by fetchBtcPrice).
+            //    This ensures all data fields show something immediately.
+            activeLicenseKey = localStorage.getItem(CURRENT_LICENSE_ID_KEY);
+            loadMinerState(); 
+            updateDisplay(); 
+            
+            // 3. Check license and show the correct view
+            checkLicense();
             selectPackage(currentPackageKey);
         };
     </script>
